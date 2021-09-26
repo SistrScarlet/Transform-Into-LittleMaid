@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
-  "id": "examplemod",
+  "id": "transformintolittlemaid",
   "version": "${version}",
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Transform Into LittleMaid",
+  "description": "メイドさんに変身するModです",
   "authors": [
-    "Me!"
+    "Sistr"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://forum.civa.jp/viewtopic.php?f=3&t=119",
+    "sources": "https://github.com/SistrScarlet/Transform-Into-LittleMaid"
   },
-  "license": "Insert License Here",
+  "license": "",
   "icon": "assets/examplemod/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.examplemod.fabric.ExampleModFabric"
+      "net.sistr.transformintolittlemaid.fabric.TransformIntoLittleMaidModFabric"
     ]
   },
   "depends": {
