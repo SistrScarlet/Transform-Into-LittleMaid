@@ -1,0 +1,176 @@
+package net.sistr.transformintolittlemaid.mixin;
+
+import com.mojang.authlib.GameProfile;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.sistr.littlemaidmodelloader.entity.compound.IHasMultiModel;
+import net.sistr.littlemaidmodelloader.entity.compound.MultiModelCompound;
+import net.sistr.littlemaidmodelloader.maidmodel.IModelCaps;
+import net.sistr.littlemaidmodelloader.multimodel.IMultiModel;
+import net.sistr.littlemaidmodelloader.multimodel.layer.MMPose;
+import net.sistr.littlemaidmodelloader.resource.holder.TextureHolder;
+import net.sistr.littlemaidmodelloader.resource.manager.LMTextureManager;
+import net.sistr.littlemaidmodelloader.resource.util.TextureColors;
+import net.sistr.transformintolittlemaid.util.LittleMaidTransformable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Optional;
+
+@Mixin(PlayerEntity.class)
+public abstract class MixinPlayerEntity extends LivingEntity implements IHasMultiModel, LittleMaidTransformable {
+    private MultiModelCompound multiModel_TLM;
+    private boolean isTransformedLittleMaid_TLM;
+
+    protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
+        super(type, worldIn);
+    }
+
+    @Inject(method = "<init>", at = @At("RETURN"))
+    public void onInit(World world, BlockPos pos, float yaw, GameProfile profile, CallbackInfo ci) {
+        this.multiModel_TLM = new MultiModelCompound(this,
+                LMTextureManager.INSTANCE.getTexture("default")
+                        .orElseThrow(() -> new IllegalStateException("デフォルトモデルが存在しません。")),
+                LMTextureManager.INSTANCE.getTexture("default")
+                        .orElseThrow(() -> new IllegalStateException("デフォルトモデルが存在しません。")));
+    }
+
+    @Inject(method = "writeCustomDataToTag", at = @At("RETURN"))
+    public void onWriteCustomDataToTag(CompoundTag tag, CallbackInfo ci) {
+        tag.putByte("SkinColor", (byte) getColor().getIndex());
+        tag.putBoolean("IsContract", isContract());
+        tag.putString("SkinTexture", getTextureHolder(Layer.SKIN, Part.HEAD).getTextureName());
+        for (Part part : Part.values()) {
+            tag.putString("ArmorTextureInner" + part.getPartName(),
+                    getTextureHolder(Layer.INNER, part).getTextureName());
+            tag.putString("ArmorTextureOuter" + part.getPartName(),
+                    getTextureHolder(Layer.OUTER, part).getTextureName());
+        }
+
+        tag.putBoolean("IsChanged_TLM", isTransformedLittleMaid_TLM);
+    }
+
+    @Inject(method = "readCustomDataFromTag", at = @At("RETURN"))
+    public void onReadCustomDataFromTag(CompoundTag tag, CallbackInfo ci) {
+        if (tag.contains("SkinColor")) {
+            setColor(TextureColors.getColor(tag.getByte("SkinColor")));
+        }
+        setContract(tag.getBoolean("IsContract"));
+        LMTextureManager textureManager = LMTextureManager.INSTANCE;
+        if (tag.contains("SkinTexture")) {
+            textureManager.getTexture(tag.getString("SkinTexture"))
+                    .ifPresent(textureHolder -> setTextureHolder(textureHolder, Layer.SKIN, Part.HEAD));
+        }
+        for (Part part : Part.values()) {
+            String inner = "ArmorTextureInner" + part.getPartName();
+            String outer = "ArmorTextureOuter" + part.getPartName();
+            if (tag.contains(inner)) {
+                textureManager.getTexture(tag.getString(inner))
+                        .ifPresent(textureHolder -> setTextureHolder(textureHolder, Layer.INNER, part));
+            }
+            if (tag.contains(outer)) {
+                textureManager.getTexture(tag.getString(outer))
+                        .ifPresent(textureHolder -> setTextureHolder(textureHolder, Layer.OUTER, part));
+            }
+        }
+
+        isTransformedLittleMaid_TLM = tag.getBoolean("IsChanged_TLM");
+        calculateDimensions();
+    }
+
+    @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
+    public void onGetDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
+        if (this.isTransformedLittleMaid_TLM) {
+            getModel(Layer.SKIN, Part.HEAD).ifPresent(model -> {
+                IModelCaps caps = this.getCaps();
+                cir.setReturnValue(EntityDimensions.changing(
+                        model.getWidth(caps, MMPose.convertPose(pose)), model.getHeight(caps, MMPose.convertPose(pose))));
+            });
+        }
+    }
+
+    @Inject(method = "getActiveEyeHeight", at = @At("HEAD"), cancellable = true)
+    public void onGetActiveEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
+        if (this.isTransformedLittleMaid_TLM) {
+            getModel(Layer.SKIN, Part.HEAD)
+                    .ifPresent(model -> cir.setReturnValue(model.getEyeHeight(this.getCaps(), MMPose.convertPose(pose))));
+        }
+    }
+
+    @Override
+    public boolean isAllowChangeTexture(Entity entity, TextureHolder textureHolder, Layer layer, Part part) {
+        return multiModel_TLM.isAllowChangeTexture(entity, textureHolder, layer, part);
+    }
+
+    @Override
+    public void setTextureHolder(TextureHolder textureHolder, Layer layer, Part part) {
+        multiModel_TLM.setTextureHolder(textureHolder, layer, part);
+    }
+
+    @Override
+    public TextureHolder getTextureHolder(Layer layer, Part part) {
+        return multiModel_TLM.getTextureHolder(layer, part);
+    }
+
+    @Override
+    public TextureColors getColor() {
+        return multiModel_TLM.getColor();
+    }
+
+    @Override
+    public void setColor(TextureColors textureColors) {
+        multiModel_TLM.setColor(textureColors);
+    }
+
+    @Override
+    public boolean isContract() {
+        return multiModel_TLM.isContract();
+    }
+
+    @Override
+    public void setContract(boolean b) {
+        multiModel_TLM.setContract(b);
+    }
+
+    @Override
+    public Optional<IMultiModel> getModel(Layer layer, Part part) {
+        return multiModel_TLM.getModel(layer, part);
+    }
+
+    @Override
+    public Optional<Identifier> getTexture(Layer layer, Part part, boolean b) {
+        return multiModel_TLM.getTexture(layer, part, b);
+    }
+
+    @Override
+    public IModelCaps getCaps() {
+        return multiModel_TLM.getCaps();
+    }
+
+    @Override
+    public boolean isArmorVisible(Part part) {
+        return multiModel_TLM.isArmorVisible(part);
+    }
+
+    @Override
+    public boolean isArmorGlint(Part part) {
+        return multiModel_TLM.isArmorVisible(part);
+    }
+
+    @Override
+    public boolean isTransformedLittleMaid_TLM() {
+        return isTransformedLittleMaid_TLM;
+    }
+
+    @Override
+    public void setTransformedLittleMaid_TLM(boolean isChanged) {
+        isTransformedLittleMaid_TLM = isChanged;
+    }
+}

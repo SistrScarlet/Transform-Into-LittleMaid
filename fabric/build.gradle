@@ -17,6 +17,8 @@ dependencies {
     // Remove the next line if you don't want to depend on the API
     modApi "me.shedaniel:architectury-fabric:${rootProject.architectury_version}"
 
+    modImplementationMapped fileTree(dir: './mods', include: '*.jar')
+
     implementation(project(path: ":common")) {
         transitive = false
     }

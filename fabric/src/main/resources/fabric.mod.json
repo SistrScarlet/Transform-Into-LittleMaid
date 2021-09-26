@@ -17,8 +17,14 @@
   "entrypoints": {
     "main": [
       "net.sistr.transformintolittlemaid.fabric.TransformIntoLittleMaidModFabric"
+    ],
+    "client": [
+      "net.sistr.transformintolittlemaid.fabric.TransformIntoLittleMaidModClientFabric"
     ]
   },
+  "mixins": [
+    "transformintolittlemaid.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
