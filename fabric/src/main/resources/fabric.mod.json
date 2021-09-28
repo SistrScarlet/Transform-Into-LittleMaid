@@ -11,7 +11,7 @@
     "homepage": "https://forum.civa.jp/viewtopic.php?f=3&t=119",
     "sources": "https://github.com/SistrScarlet/Transform-Into-LittleMaid"
   },
-  "license": "",
+  "license": "https://github.com/SistrScarlet/LittleMaidModelLoader-Fabric/blob/1.16_Architectury/LICENCE.md",
   "icon": "assets/examplemod/icon.png",
   "environment": "*",
   "entrypoints": {
@@ -29,7 +29,8 @@
     "fabricloader": ">=0.7.4",
     "fabric": "*",
     "minecraft": ">=1.16.4",
-    "architectury": ">=1.1.55"
+    "architectury": ">=1.1.55",
+    "littlemaidmodelloader": ">=2.0.0"
   },
   "suggests": {
     "flamingo": "*"

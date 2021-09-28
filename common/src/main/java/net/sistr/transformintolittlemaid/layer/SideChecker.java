@@ -1,12 +1,12 @@
 package net.sistr.transformintolittlemaid.layer;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
+import me.shedaniel.architectury.annotations.ExpectPlatform;
 
 public class SideChecker {
 
+    @ExpectPlatform
     public static boolean isClient() {
-        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+        throw new AssertionError();
     }
 
 }

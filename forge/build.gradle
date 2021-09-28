@@ -13,12 +13,15 @@ architectury {
 
 loom {
     useFabricMixin = true
+    mixinConfigs = ["transformintolittlemaid.mixins.json"]
 }
 
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
     // Remove the next line if you don't want to depend on the API
     modApi "me.shedaniel:architectury-forge:${rootProject.architectury_version}"
+
+    modImplementationMapped fileTree(dir: './mods', include: '*.jar')
 
     implementation(project(path: ":common")) {
         transitive = false

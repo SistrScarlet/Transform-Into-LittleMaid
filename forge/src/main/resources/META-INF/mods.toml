@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[35,)"
 #issueTrackerURL = ""
-license = ""
+license = "https://github.com/SistrScarlet/LittleMaidModelLoader-Fabric/blob/1.16_Architectury/LICENCE.md"
 
 [[mods]]
 modId = "transformintolittlemaid"
@@ -33,3 +33,10 @@ mandatory = true
 versionRange = "[1.1.55,)"
 ordering = "AFTER"
 side = "BOTH"
+
+[[dependencies.transformintolittlemaid]]
+modId="littlemaidmodelloader"
+mandatory=true
+versionRange="[2.0.0,)"
+ordering="NONE"
+side="BOTH"
