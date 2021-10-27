@@ -3,7 +3,7 @@ package net.sistr.transformintolittlemaid.mixin;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -42,8 +42,8 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
                         .orElseThrow(() -> new IllegalStateException("デフォルトモデルが存在しません。")));
     }
 
-    @Inject(method = "writeCustomDataToTag", at = @At("RETURN"))
-    public void onWriteCustomDataToTag(CompoundTag tag, CallbackInfo ci) {
+    @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
+    public void onWriteCustomDataToTag(NbtCompound tag, CallbackInfo ci) {
         tag.putByte("SkinColor", (byte) getColor().getIndex());
         tag.putBoolean("IsContract", isContract());
         tag.putString("SkinTexture", getTextureHolder(Layer.SKIN, Part.HEAD).getTextureName());
@@ -57,8 +57,8 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
         tag.putBoolean("IsChanged_TLM", isTransformedLittleMaid_TLM);
     }
 
-    @Inject(method = "readCustomDataFromTag", at = @At("RETURN"))
-    public void onReadCustomDataFromTag(CompoundTag tag, CallbackInfo ci) {
+    @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
+    public void onReadCustomDataFromTag(NbtCompound tag, CallbackInfo ci) {
         if (tag.contains("SkinColor")) {
             setColor(TextureColors.getColor(tag.getByte("SkinColor")));
         }

@@ -46,7 +46,12 @@ public class LittleMaidPlayerRenderer extends PlayerEntityRenderer {
         IHasMultiModel hasMultiModel = ((IHasMultiModel) player);
         hasMultiModel.getModel(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD)
                 .filter(m -> m instanceof ModelMultiBase)
-                .ifPresent(model -> ((ModelMultiBase) model).renderFirstPersonHand(hasMultiModel.getCaps()));
+                .map(model -> ((ModelMultiBase) model))
+                .ifPresent(model -> {
+                    model.animateModel(hasMultiModel.getCaps(), 0f, 0f, 0f);
+                    model.setAngles(hasMultiModel.getCaps(), 0f, 0f, 0f, 0f, 0f);
+                    model.renderFirstPersonHand(hasMultiModel.getCaps());
+                });
     }
 
     @Override

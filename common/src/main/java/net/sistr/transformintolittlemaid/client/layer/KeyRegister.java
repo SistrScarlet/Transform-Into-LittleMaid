@@ -3,7 +3,7 @@ package net.sistr.transformintolittlemaid.client.layer;
 import me.shedaniel.architectury.registry.KeyBindings;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.option.KeyBinding;
 
 @Environment(EnvType.CLIENT)
 public class KeyRegister {
