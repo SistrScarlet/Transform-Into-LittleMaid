@@ -34,9 +34,9 @@ public class LittleMaidPlayerRenderer extends PlayerEntityRenderer {
     }
 
     @Override
-    public void render(AbstractClientPlayerEntity abstractClientPlayerEntity, float f, float g,
+    public void render(AbstractClientPlayerEntity abstractClientPlayerEntity, float yaw, float tickDelta,
                        MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-        this.model.render(abstractClientPlayerEntity, f, g, matrixStack, vertexConsumerProvider, i);
+        this.model.render(abstractClientPlayerEntity, yaw, tickDelta, matrixStack, vertexConsumerProvider, i);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class LittleMaidPlayerRenderer extends PlayerEntityRenderer {
         IHasMultiModel hasMultiModel = ((IHasMultiModel) player);
         hasMultiModel.getModel(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD)
                 .filter(m -> m instanceof ModelMultiBase)
-                .ifPresent(model -> ((ModelMultiBase) model).renderFirstPersonHand(hasMultiModel.getCaps()));
+                .ifPresent(model -> model.renderFirstPersonHand(hasMultiModel.getCaps()));
         matrices.pop();
     }
 
