@@ -1,6 +1,6 @@
 package net.sistr.transformintolittlemaid.mixin;
 
-import me.shedaniel.architectury.networking.NetworkManager;
+import dev.architectury.networking.NetworkManager;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.PlayerManager;

@@ -1,7 +1,7 @@
 package net.sistr.transformintolittlemaid.network;
 
+import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
-import me.shedaniel.architectury.networking.NetworkManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -29,7 +29,7 @@ public class TransformLittleMaidPacket {
 
     public static PacketByteBuf createS2CPacket(ServerPlayerEntity player, boolean changed) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        buf.writeVarInt(player.getEntityId());
+        buf.writeVarInt(player.getId());
         buf.writeBoolean(changed);
         return buf;
     }

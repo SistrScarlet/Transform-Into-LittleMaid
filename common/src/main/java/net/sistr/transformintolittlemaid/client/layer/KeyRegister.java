@@ -1,6 +1,6 @@
 package net.sistr.transformintolittlemaid.client.layer;
 
-import me.shedaniel.architectury.registry.KeyBindings;
+import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.option.KeyBinding;
@@ -9,7 +9,7 @@ import net.minecraft.client.option.KeyBinding;
 public class KeyRegister {
 
     public static void register(KeyBinding key) {
-        KeyBindings.registerKeyBinding(key);
+        KeyMappingRegistry.register(key);
     }
 
 }

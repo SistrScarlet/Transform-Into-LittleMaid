@@ -6,6 +6,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
@@ -28,9 +29,9 @@ public class LittleMaidPlayerRenderer extends PlayerEntityRenderer {
     private static final Identifier NULL_TEXTURE = new Identifier(LittleMaidModelLoader.MODID, "null");
     private final LittleMaidMultiModel model;
 
-    public LittleMaidPlayerRenderer(EntityRenderDispatcher dispatcher) {
-        super(dispatcher);
-        this.model = new LittleMaidMultiModel(dispatcher);
+    public LittleMaidPlayerRenderer(EntityRendererFactory.Context context) {
+        super(context, false);
+        this.model = new LittleMaidMultiModel(context);
     }
 
     @Override
@@ -76,8 +77,8 @@ public class LittleMaidPlayerRenderer extends PlayerEntityRenderer {
 
     private static class LittleMaidMultiModel extends MultiModelRenderer {
 
-        public LittleMaidMultiModel(EntityRenderDispatcher dispatcher) {
-            super(dispatcher);
+        public LittleMaidMultiModel(EntityRendererFactory.Context context) {
+            super(context);
         }
 
         @Override
