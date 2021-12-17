@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.sistr.littlemaidmodelloader.entity.compound.IHasMultiModel;
 import net.sistr.littlemaidmodelloader.entity.compound.MultiModelCompound;
@@ -16,6 +17,7 @@ import net.sistr.littlemaidmodelloader.resource.holder.TextureHolder;
 import net.sistr.littlemaidmodelloader.resource.manager.LMTextureManager;
 import net.sistr.littlemaidmodelloader.resource.util.TextureColors;
 import net.sistr.transformintolittlemaid.util.LittleMaidTransformable;
+import net.sistr.transformintolittlemaid.util.WaitTime;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,9 +27,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Optional;
 
 @Mixin(PlayerEntity.class)
-public abstract class MixinPlayerEntity extends LivingEntity implements IHasMultiModel, LittleMaidTransformable {
+public abstract class MixinPlayerEntity extends LivingEntity implements IHasMultiModel, LittleMaidTransformable, WaitTime {
     private MultiModelCompound multiModel_TLM;
     private boolean isTransformedLittleMaid_TLM;
+    private int waitTime_TILM = 0;
 
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
@@ -172,5 +175,19 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
     @Override
     public void setTransformedLittleMaid_TLM(boolean isChanged) {
         isTransformedLittleMaid_TLM = isChanged;
+    }
+
+    @Inject(method = "tickMovement", at = @At("HEAD"))
+    public void onTickMovement(CallbackInfo ci) {
+        if (MathHelper.approximatelyEquals(0, stepBobbingAmount)) {
+            waitTime_TILM++;
+        } else {
+            waitTime_TILM = 0;
+        }
+    }
+
+    @Override
+    public int getWaitTime_TILM() {
+        return waitTime_TILM;
     }
 }
