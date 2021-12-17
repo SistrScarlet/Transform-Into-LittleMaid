@@ -16,27 +16,27 @@ description = '''
 [[dependencies.transformintolittlemaid]]
 modId = "forge"
 mandatory = true
-versionRange = "[35,)"
+versionRange = "[39,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.16.2,)"
+versionRange = "[1.18.1,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId = "architectury"
 mandatory = true
-versionRange = "[1.1.55,)"
+versionRange = "[3.2.49,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId="littlemaidmodelloader"
 mandatory=true
-versionRange="[2.0.0,)"
+versionRange="[4.0.0,)"
 ordering="NONE"
 side="BOTH"
