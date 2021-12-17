@@ -21,6 +21,7 @@ import net.sistr.littlemaidmodelloader.maidmodel.ModelMultiBase;
 import net.sistr.littlemaidmodelloader.maidmodel.ModelRenderer;
 import net.sistr.littlemaidmodelloader.multimodel.layer.MMMatrixStack;
 import net.sistr.littlemaidmodelloader.multimodel.layer.MMVertexConsumer;
+import net.sistr.transformintolittlemaid.util.WaitTime;
 
 //MixinでPlayerEntityにIHasMultiModelをブチこんでるため、ジェネリクスはRawで使う
 @Environment(EnvType.CLIENT)
@@ -89,6 +90,7 @@ public class LittleMaidPlayerRenderer extends PlayerEntityRenderer {
             model.setCapsValue(IModelCaps.caps_aimedBow,
                     action == UseAction.BOW || action == UseAction.CROSSBOW);
             model.setCapsValue(IModelCaps.caps_isContract, ((IHasMultiModel) entity).isContract());
+            model.setCapsValue(IModelCaps.caps_isWait, entity instanceof WaitTime && 60 < ((WaitTime) entity).getWaitTime_TILM());
         }
     }
 
