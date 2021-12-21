@@ -3,6 +3,7 @@ package net.sistr.transformintolittlemaid.mixin;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -14,6 +15,7 @@ import net.sistr.littlemaidmodelloader.maidmodel.IModelCaps;
 import net.sistr.littlemaidmodelloader.multimodel.IMultiModel;
 import net.sistr.littlemaidmodelloader.multimodel.layer.MMPose;
 import net.sistr.littlemaidmodelloader.resource.holder.TextureHolder;
+import net.sistr.littlemaidmodelloader.resource.manager.LMModelManager;
 import net.sistr.littlemaidmodelloader.resource.manager.LMTextureManager;
 import net.sistr.littlemaidmodelloader.resource.util.TextureColors;
 import net.sistr.transformintolittlemaid.util.LittleMaidTransformable;
@@ -104,6 +106,30 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
         if (this.isTransformedLittleMaid_TLM) {
             getModel(Layer.SKIN, Part.HEAD)
                     .ifPresent(model -> cir.setReturnValue(model.getEyeHeight(this.getCaps(), MMPose.convertPose(pose))));
+        }
+    }
+
+    //上になんか乗ってるやつのオフセット
+    @Override
+    public double getMountedHeightOffset() {
+        IMultiModel model = getModel(Layer.SKIN, Part.HEAD)
+                .orElse(LMModelManager.INSTANCE.getDefaultModel());
+        return model.getMountedYOffset(getCaps());
+    }
+
+    //騎乗時のオフセット
+    @Inject(method = "getHeightOffset", at = @At("HEAD"), cancellable = true)
+    public void getHeightOffset(CallbackInfoReturnable<Double> cir) {
+        IMultiModel model = getModel(Layer.SKIN, Part.HEAD)
+                .orElse(LMModelManager.INSTANCE.getDefaultModel());
+        cir.setReturnValue((double) (model.getyOffset(getCaps()) - getHeight()));
+    }
+
+    //防具の更新
+    @Inject(method = "equipStack", at = @At("HEAD"))
+    public void onEquipStack(EquipmentSlot slot, ItemStack stack, CallbackInfo ci) {
+        if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+            multiModel_TLM.updateArmor();
         }
     }
 
