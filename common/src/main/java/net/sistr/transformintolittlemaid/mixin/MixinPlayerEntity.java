@@ -205,7 +205,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
 
     @Inject(method = "tickMovement", at = @At("HEAD"))
     public void onTickMovement(CallbackInfo ci) {
-        if (MathHelper.approximatelyEquals(0, stepBobbingAmount)) {
+        if (MathHelper.approximatelyEquals(0, stepBobbingAmount) || !handSwinging || !isUsingItem()) {
             waitTime_TILM++;
         } else {
             waitTime_TILM = 0;
