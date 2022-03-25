@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.sistr.littlemaidmodelloader.entity.compound.IHasMultiModel;
 import net.sistr.littlemaidmodelloader.entity.compound.MultiModelCompound;
@@ -205,7 +204,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
 
     @Inject(method = "tickMovement", at = @At("HEAD"))
     public void onTickMovement(CallbackInfo ci) {
-        if (MathHelper.approximatelyEquals(0, stepBobbingAmount) && !handSwinging && !isUsingItem()) {
+        if (Math.abs(stepBobbingAmount) < 1.0E-5F && !handSwinging && !isUsingItem()) {
             waitTime_TILM++;
         } else {
             waitTime_TILM = 0;
