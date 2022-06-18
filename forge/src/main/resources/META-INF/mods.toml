@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[40,)"
-issueTrackerURL = "https://github.com/SistrScarlet/LittleMaidModelLoader-Fabric/issues"
+issueTrackerURL = "https://github.com/SistrScarlet/Transform-Into-LittleMaid/issues"
 license = "https://github.com/SistrScarlet/LittleMaidModelLoader-Fabric/blob/1.16_Architectury/LICENCE.md"
 
 [[mods]]
@@ -8,7 +8,7 @@ modId = "transformintolittlemaid"
 version = "${version}"
 displayName = "Transform Into LittleMaid Mod"
 authors = "Sistr"
-description = "いろいろ手伝ってくれたりくれなかったりする、ちいさなメイドさんを追加するMOD"
+description = "メイドさんに変身するModです"
 logoFile = "icon.png"
 
 [[dependencies.transformintolittlemaid]]
