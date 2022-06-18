@@ -42,7 +42,7 @@ public class KeyManager {
     private static void pressKeySelect() {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.world != null && mc.player != null)
-            mc.setScreen(new ModelSelectScreen(new LiteralText(""), mc.world, ((IHasMultiModel) mc.player)));
+            mc.setScreen(new ModelSelectScreen(new LiteralText(""), mc.world, mc.player));
     }
 
 }

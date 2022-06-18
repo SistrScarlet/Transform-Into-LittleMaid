@@ -1,16 +1,22 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
-}
-
-loom {
-    forge {
-        mixinConfig "transformintolittlemaid.mixins.json"
-    }
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 architectury {
     platformSetupLoomIde()
     forge()
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+
+    forge {
+        convertAccessWideners = true
+        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+        //テンプレートにはないが、これないとMixin動かん
+        mixinConfig "transformintolittlemaid-common.mixins.json"
+        mixinConfig "transformintolittlemaid.mixins.json"
+    }
 }
 
 configurations {
@@ -21,10 +27,16 @@ configurations {
     developmentForge.extendsFrom common
 }
 
+repositories {
+    maven { url "https://maven.shedaniel.me/" }
+}
+
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
+    forge "net.minecraftforge:forge:${rootProject.forge_version}"
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
+
+    modApi "me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_config_version}"
 
     modImplementationMapped fileTree(dir: './mods', include: '*.jar')
 
@@ -42,15 +54,16 @@ processResources {
 
 shadowJar {
     exclude "fabric.mod.json"
+    exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    classifier "forge-dev"
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    classifier "Forge"
 }
 
 jar {

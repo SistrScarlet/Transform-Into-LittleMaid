@@ -1,3 +1,15 @@
+architectury {
+    common(rootProject.enabled_platforms.split(","))
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/transformintolittlemaid.accesswidener")
+}
+
+repositories {
+    maven { url "https://maven.shedaniel.me/" }
+}
+
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
@@ -5,11 +17,11 @@ dependencies {
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury:${rootProject.architectury_version}"
 
-    modImplementationMapped fileTree(dir: './mods', include: '*.jar')
-}
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
 
-architectury {
-    common(true)
+    modImplementationMapped fileTree(dir: './mods', include: '*.jar')
 }
 
 publishing {

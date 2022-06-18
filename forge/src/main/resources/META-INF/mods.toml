@@ -1,6 +1,6 @@
 modLoader = "javafml"
-loaderVersion = "[35,)"
-#issueTrackerURL = ""
+loaderVersion = "[40,)"
+issueTrackerURL = "https://github.com/SistrScarlet/LittleMaidModelLoader-Fabric/issues"
 license = "https://github.com/SistrScarlet/LittleMaidModelLoader-Fabric/blob/1.16_Architectury/LICENCE.md"
 
 [[mods]]
@@ -8,35 +8,40 @@ modId = "transformintolittlemaid"
 version = "${version}"
 displayName = "Transform Into LittleMaid Mod"
 authors = "Sistr"
-description = '''
-メイドさんに変身するModです
-'''
-#logoFile = ""
+description = "いろいろ手伝ってくれたりくれなかったりする、ちいさなメイドさんを追加するMOD"
+logoFile = "icon.png"
 
 [[dependencies.transformintolittlemaid]]
 modId = "forge"
 mandatory = true
-versionRange = "[39,)"
+versionRange = "[40,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.18.1,)"
+versionRange = "[1.18.2,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId = "architectury"
 mandatory = true
-versionRange = "[3.2.49,)"
+versionRange = "[4.4.59,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
-modId="littlemaidmodelloader"
-mandatory=true
-versionRange="[4.0.0,)"
-ordering="NONE"
-side="BOTH"
+modId = "cloth_config"
+mandatory = true
+versionRange = "[6.2.62,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.transformintolittlemaid]]
+modId = "littlemaidmodelloader"
+mandatory = true
+versionRange = "[4.4.0,)"
+ordering = "AFTER"
+side = "BOTH"

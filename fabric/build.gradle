@@ -1,10 +1,14 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 architectury {
     platformSetupLoomIde()
     fabric()
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
 }
 
 configurations {
@@ -16,6 +20,7 @@ configurations {
 }
 
 repositories {
+    maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases/" }
 }
 
@@ -25,9 +30,13 @@ dependencies {
     // Remove the next line if you don't want to depend on the API
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
 
-    modImplementationMapped fileTree(dir: './mods', include: '*.jar')
+    modApi("com.terraformersmc:modmenu:${rootProject.mod_menu_version}")
 
-    modApi("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") { transitive false }
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
+    modImplementationMapped fileTree(dir: './mods', include: '*.jar')
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
@@ -42,14 +51,17 @@ processResources {
 }
 
 shadowJar {
+    exclude "architectury.common.json"
+
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    classifier "fabric-dev"
 }
 
 remapJar {
+    injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    classifier "Fabric"
 }
 
 jar {
@@ -60,8 +72,6 @@ sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
-    //無いと何故かエラー吐く
-    duplicatesStrategy DuplicatesStrategy.INCLUDE
 }
 
 components.java {
