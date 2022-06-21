@@ -22,9 +22,6 @@
       "net.sistr.transformintolittlemaid.fabric.TransformIntoLittleMaidModClientFabric"
     ],
     "server": [
-    ],
-    "modmenu": [
-      "net.sistr.transformintolittlemaid.fabric.LMRBModMenuIntegration"
     ]
   },
   "mixins": [
@@ -33,10 +30,10 @@
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.18.2",
-    "architectury": ">=4.4.59",
-    "modmenu": ">=3.2.2",
-    "cloth-config": ">=6.2.62",
-    "littlemaidmodelloader": ">=4.4.0"
+    "minecraft": ">=1.16.5",
+    "architectury": ">=1.32.63",
+    "modmenu": ">=1.16.22",
+    "cloth-config2": ">=4.14.64",
+    "littlemaidmodelloader": ">=2.5.3"
   }
 }

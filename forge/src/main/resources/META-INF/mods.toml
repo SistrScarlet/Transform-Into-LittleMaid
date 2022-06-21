@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[40,)"
+loaderVersion = "[36,)"
 issueTrackerURL = "https://github.com/SistrScarlet/Transform-Into-LittleMaid/issues"
 license = "https://github.com/SistrScarlet/LittleMaidModelLoader-Fabric/blob/1.16_Architectury/LICENCE.md"
 
@@ -14,34 +14,32 @@ logoFile = "icon.png"
 [[dependencies.transformintolittlemaid]]
 modId = "forge"
 mandatory = true
-versionRange = "[40,)"
+versionRange = "[36,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.18.2,)"
+versionRange = "[1.16.5,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId = "architectury"
 mandatory = true
-versionRange = "[4.4.59,)"
+versionRange = "[1.32.63,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId = "cloth_config"
 mandatory = true
-versionRange = "[6.2.62,)"
+versionRange = "[4.14.64,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId = "littlemaidmodelloader"
 mandatory = true
-versionRange = "[4.4.0,)"
-ordering = "AFTER"
-side = "BOTH"
+versionRange = "[2.5.3,)"

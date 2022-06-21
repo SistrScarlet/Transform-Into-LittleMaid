@@ -37,7 +37,7 @@ public class MixinPlayerSpawnS2CPacket implements AdditionalPlayerSpawnPacket {
         isTransformedLittleMaid_TLM = ((LittleMaidTransformable) player).isTransformedLittleMaid_TLM();
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/network/PacketByteBuf;)V", at = @At("RETURN"))
+    @Inject(method = "read", at = @At("RETURN"))
     public void onReadPacketData(PacketByteBuf buf, CallbackInfo ci) {
         textureName_TLM = buf.readString(32767);
         for (IHasMultiModel.Part part : IHasMultiModel.Part.values()) {
