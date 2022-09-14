@@ -12,27 +12,24 @@
     "sources": "https://github.com/SistrScarlet/Transform-Into-LittleMaid"
   },
   "license": "https://github.com/SistrScarlet/LittleMaidModelLoader-Fabric/blob/1.16_Architectury/LICENCE.md",
-  "icon": "assets/examplemod/icon.png",
+  "icon": "assets/transformintolittlemaid/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
       "net.sistr.transformintolittlemaid.fabric.TransformIntoLittleMaidModFabric"
     ],
     "client": [
-      "net.sistr.transformintolittlemaid.fabric.TransformIntoLittleMaidModClientFabric"
+      "net.sistr.transformintolittlemaid.fabric.TransformIntoLittleMaidModFabric"
     ]
   },
   "mixins": [
-    "transformintolittlemaid.mixins.json"
+    "transformintolittlemaid.mixins.json",
+    "transformintolittlemaid-common.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.7.4",
     "fabric": "*",
-    "minecraft": ">=1.16.4",
-    "architectury": ">=1.1.55",
-    "littlemaidmodelloader": ">=2.0.0"
-  },
-  "suggests": {
-    "flamingo": "*"
+    "minecraft": ">=1.16.5",
+    "architectury": ">=1.32.66",
+    "littlemaidmodelloader": ">=2.5.0"
   }
 }

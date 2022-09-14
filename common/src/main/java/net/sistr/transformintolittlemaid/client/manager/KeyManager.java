@@ -6,7 +6,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.LiteralText;
 import net.sistr.littlemaidmodelloader.client.screen.ModelSelectScreen;
-import net.sistr.littlemaidmodelloader.entity.compound.IHasMultiModel;
 import net.sistr.transformintolittlemaid.TransformIntoLittleMaidMod;
 import net.sistr.transformintolittlemaid.network.TransformLittleMaidPacket;
 import net.sistr.transformintolittlemaid.util.LittleMaidTransformable;
@@ -42,7 +41,7 @@ public class KeyManager {
     private static void pressKeySelect() {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.world != null && mc.player != null)
-            mc.openScreen(new ModelSelectScreen(new LiteralText(""), mc.world, ((IHasMultiModel) mc.player)));
+            mc.openScreen(new ModelSelectScreen(new LiteralText(""), mc.world, mc.player));
     }
 
 }

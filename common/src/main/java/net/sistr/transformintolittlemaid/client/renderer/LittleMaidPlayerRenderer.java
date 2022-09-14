@@ -13,7 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.UseAction;
-import net.sistr.littlemaidmodelloader.LittleMaidModelLoader;
+import net.sistr.littlemaidmodelloader.LMMLMod;
 import net.sistr.littlemaidmodelloader.client.renderer.MultiModelRenderer;
 import net.sistr.littlemaidmodelloader.entity.compound.IHasMultiModel;
 import net.sistr.littlemaidmodelloader.maidmodel.IModelCaps;
@@ -26,7 +26,7 @@ import net.sistr.transformintolittlemaid.util.WaitTime;
 //MixinでPlayerEntityにIHasMultiModelをブチこんでるため、ジェネリクスはRawで使う
 @Environment(EnvType.CLIENT)
 public class LittleMaidPlayerRenderer extends PlayerEntityRenderer {
-    private static final Identifier NULL_TEXTURE = new Identifier(LittleMaidModelLoader.MODID, "null");
+    private static final Identifier NULL_TEXTURE = new Identifier(LMMLMod.MODID, "null");
     private final LittleMaidMultiModel model;
 
     public LittleMaidPlayerRenderer(EntityRenderDispatcher dispatcher) {

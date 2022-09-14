@@ -1,3 +1,11 @@
+architectury {
+    common(rootProject.enabled_platforms.split(","))
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/transformintolittlemaid.accesswidener")
+}
+
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
@@ -6,18 +14,6 @@ dependencies {
     modApi "me.shedaniel:architectury:${rootProject.architectury_version}"
 
     modImplementationMapped fileTree(dir: './mods', include: '*.jar')
-}
-
-architectury {
-    common()
-}
-
-configurations {
-    dev
-}
-
-artifacts {
-    dev(jar)
 }
 
 publishing {

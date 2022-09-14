@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[35,)"
+loaderVersion = "[36,)"
 #issueTrackerURL = ""
 license = "https://github.com/SistrScarlet/LittleMaidModelLoader-Fabric/blob/1.16_Architectury/LICENCE.md"
 
@@ -16,27 +16,27 @@ description = '''
 [[dependencies.transformintolittlemaid]]
 modId = "forge"
 mandatory = true
-versionRange = "[35,)"
+versionRange = "[36,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.16.2,)"
+versionRange = "[1.16.5,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId = "architectury"
 mandatory = true
-versionRange = "[1.1.55,)"
+versionRange = "[1.32.66,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId="littlemaidmodelloader"
 mandatory=true
-versionRange="[2.0.0,)"
+versionRange="[2.5.0,)"
 ordering="NONE"
 side="BOTH"
