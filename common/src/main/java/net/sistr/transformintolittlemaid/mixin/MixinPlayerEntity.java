@@ -5,6 +5,7 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -39,7 +40,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    public void onInit(World world, BlockPos pos, float yaw, GameProfile profile, CallbackInfo ci) {
+    public void onInit(World world, BlockPos pos, float yaw, GameProfile gameProfile, PlayerPublicKey publicKey, CallbackInfo ci) {
         this.multiModel_TLM = new MultiModelCompound(this,
                 LMTextureManager.INSTANCE.getTexture("default")
                         .orElseThrow(() -> new IllegalStateException("デフォルトモデルが存在しません。")),
