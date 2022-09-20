@@ -9,7 +9,6 @@ import net.sistr.littlemaidmodelloader.entity.compound.IHasMultiModel;
 import net.sistr.littlemaidmodelloader.resource.util.ArmorSets;
 import net.sistr.littlemaidmodelloader.resource.util.TextureColors;
 import net.sistr.transformintolittlemaid.util.AdditionalPlayerSpawnPacket;
-import net.sistr.transformintolittlemaid.util.LittleMaidTransformable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,7 +20,6 @@ public class MixinPlayerSpawnS2CPacket implements AdditionalPlayerSpawnPacket {
     private String textureName_TLM;
     private TextureColors color_TLM;
     private boolean isContract_TLM;
-    private boolean isTransformedLittleMaid_TLM;
 
     @Inject(method = "<init>(Lnet/minecraft/entity/player/PlayerEntity;)V", at = @At("RETURN"))
     public void onInit(PlayerEntity player, CallbackInfo ci) {
@@ -34,7 +32,6 @@ public class MixinPlayerSpawnS2CPacket implements AdditionalPlayerSpawnPacket {
         }
         color_TLM = hasMultiModel.getColor();
         isContract_TLM = hasMultiModel.isContract();
-        isTransformedLittleMaid_TLM = ((LittleMaidTransformable) player).isTransformedLittleMaid_TLM();
     }
 
     @Inject(method = "<init>(Lnet/minecraft/network/PacketByteBuf;)V", at = @At("RETURN"))
@@ -45,7 +42,6 @@ public class MixinPlayerSpawnS2CPacket implements AdditionalPlayerSpawnPacket {
         }
         color_TLM = buf.readEnumConstant(TextureColors.class);
         isContract_TLM = buf.readBoolean();
-        isTransformedLittleMaid_TLM = buf.readBoolean();
     }
 
     @Inject(method = "write", at = @At("RETURN"))
@@ -56,7 +52,6 @@ public class MixinPlayerSpawnS2CPacket implements AdditionalPlayerSpawnPacket {
         }
         buf.writeEnumConstant(color_TLM);
         buf.writeBoolean(isContract_TLM);
-        buf.writeBoolean(isTransformedLittleMaid_TLM);
     }
 
     @Environment(EnvType.CLIENT)
@@ -83,8 +78,4 @@ public class MixinPlayerSpawnS2CPacket implements AdditionalPlayerSpawnPacket {
         return isContract_TLM;
     }
 
-    @Override
-    public boolean isTransformedLittleMaid_TLM() {
-        return isTransformedLittleMaid_TLM;
-    }
 }

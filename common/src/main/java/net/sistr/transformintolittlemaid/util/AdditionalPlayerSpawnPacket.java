@@ -13,6 +13,4 @@ public interface AdditionalPlayerSpawnPacket {
 
     boolean isContract_TLM();
 
-    boolean isTransformedLittleMaid_TLM();
-
 }

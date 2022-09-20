@@ -1,9 +1,18 @@
 {
   "required": true,
   "package": "net.sistr.transformintolittlemaid.mixin",
-  "compatibilityLevel": "JAVA_16",
-  "mixins": [ "MixinPlayerEntity", "MixinPlayerManager", "MixinPlayerSpawnS2CPacket" ],
-  "client": [ "MixinClientPlayNetworkHandler", "MixinEntityRenderDispatcher", "MixinMinecraftClient" ],
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MixinPlayerEntity",
+    "MixinPlayerManager",
+    "MixinPlayerSpawnS2CPacket",
+    "MixinServerPlayerEntity"
+  ],
+  "client": [
+    "MixinClientPlayNetworkHandler",
+    "MixinEntityRenderDispatcher",
+    "MixinMinecraftClient"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
