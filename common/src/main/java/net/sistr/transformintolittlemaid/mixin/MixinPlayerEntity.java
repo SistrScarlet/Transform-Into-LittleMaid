@@ -109,7 +109,8 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
             prevTransformedLittleMaid = bool;
             calculateDimensions();
         }
-        if (world.isClient && syncMultiModel) {
+        if (world.isClient && !syncMultiModel) {
+            syncMultiModel = true;
             RequestSyncMultiModelPacket.sendC2SPacket((PlayerEntity) (Object) this);
         }
     }
