@@ -61,42 +61,14 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
 
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
     public void onWriteCustomDataToTag(NbtCompound tag, CallbackInfo ci) {
-        tag.putByte("SkinColor", (byte) getColor().getIndex());
-        tag.putBoolean("IsContract", isContract());
-        tag.putString("SkinTexture", getTextureHolder(Layer.SKIN, Part.HEAD).getTextureName());
-        for (Part part : Part.values()) {
-            tag.putString("ArmorTextureInner" + part.getPartName(),
-                    getTextureHolder(Layer.INNER, part).getTextureName());
-            tag.putString("ArmorTextureOuter" + part.getPartName(),
-                    getTextureHolder(Layer.OUTER, part).getTextureName());
-        }
+        multiModel_TLM.writeToNbt(tag);
 
         tag.putBoolean("IsChanged_TLM", isTransformedLittleMaid_TLM());
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
     public void onReadCustomDataFromTag(NbtCompound tag, CallbackInfo ci) {
-        if (tag.contains("SkinColor")) {
-            setColor(TextureColors.getColor(tag.getByte("SkinColor")));
-        }
-        setContract(tag.getBoolean("IsContract"));
-        LMTextureManager textureManager = LMTextureManager.INSTANCE;
-        if (tag.contains("SkinTexture")) {
-            textureManager.getTexture(tag.getString("SkinTexture"))
-                    .ifPresent(textureHolder -> setTextureHolder(textureHolder, Layer.SKIN, Part.HEAD));
-        }
-        for (Part part : Part.values()) {
-            String inner = "ArmorTextureInner" + part.getPartName();
-            String outer = "ArmorTextureOuter" + part.getPartName();
-            if (tag.contains(inner)) {
-                textureManager.getTexture(tag.getString(inner))
-                        .ifPresent(textureHolder -> setTextureHolder(textureHolder, Layer.INNER, part));
-            }
-            if (tag.contains(outer)) {
-                textureManager.getTexture(tag.getString(outer))
-                        .ifPresent(textureHolder -> setTextureHolder(textureHolder, Layer.OUTER, part));
-            }
-        }
+        multiModel_TLM.readFromNbt(tag);
 
         setTransformedLittleMaid_TLM(tag.getBoolean("IsChanged_TLM"));
     }
