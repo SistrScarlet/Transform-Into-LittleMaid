@@ -108,6 +108,9 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
     //上になんか乗ってるやつのオフセット
     @Override
     public double getMountedHeightOffset() {
+        if (!isTransformedLittleMaid_TLM()) {
+            return super.getMountedHeightOffset();
+        }
         IMultiModel model = getModel(Layer.SKIN, Part.HEAD)
                 .orElse(LMModelManager.INSTANCE.getDefaultModel());
         return model.getMountedYOffset(getCaps());
@@ -116,9 +119,11 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
     //騎乗時のオフセット
     @Inject(method = "getHeightOffset", at = @At("HEAD"), cancellable = true)
     public void getHeightOffset(CallbackInfoReturnable<Double> cir) {
-        IMultiModel model = getModel(Layer.SKIN, Part.HEAD)
-                .orElse(LMModelManager.INSTANCE.getDefaultModel());
-        cir.setReturnValue((double) (model.getyOffset(getCaps()) - getHeight()));
+        if (isTransformedLittleMaid_TLM()) {
+            IMultiModel model = getModel(Layer.SKIN, Part.HEAD)
+                    .orElse(LMModelManager.INSTANCE.getDefaultModel());
+            cir.setReturnValue((double) (model.getyOffset(getCaps()) - getHeight()));
+        }
     }
 
     //防具の更新
