@@ -31,7 +31,6 @@ public class KeyManager {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.world != null && mc.player != null) {
             boolean changed = !((LittleMaidTransformable) mc.player).isTransformedLittleMaid_TLM();
-            ((LittleMaidTransformable) mc.player).setTransformedLittleMaid_TLM(changed);
             TransformLittleMaidPacket.sendC2SPacket(changed);
             mc.player.calculateDimensions();
         }

@@ -2,6 +2,9 @@ package net.sistr.transformintolittlemaid.mixin;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.*;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -32,8 +35,10 @@ import java.util.Optional;
 @Mixin(PlayerEntity.class)
 public abstract class MixinPlayerEntity extends LivingEntity implements IHasMultiModel, LittleMaidTransformable, WaitTime {
     private MultiModelCompound multiModel_TLM;
-    private boolean isTransformedLittleMaid_TLM;
+    private static final TrackedData<Boolean> TRANSFORMED_LITTLEMAID
+            = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private int waitTime_TILM = 0;
+    private boolean prevTransformedLittleMaid;
 
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
@@ -48,6 +53,11 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
                         .orElseThrow(() -> new IllegalStateException("デフォルトモデルが存在しません。")));
     }
 
+    @Inject(method = "initDataTracker", at = @At("RETURN"))
+    private void onInitDataTracker(CallbackInfo ci) {
+        this.dataTracker.startTracking(TRANSFORMED_LITTLEMAID, false);
+    }
+
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
     public void onWriteCustomDataToTag(NbtCompound tag, CallbackInfo ci) {
         tag.putByte("SkinColor", (byte) getColor().getIndex());
@@ -60,7 +70,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
                     getTextureHolder(Layer.OUTER, part).getTextureName());
         }
 
-        tag.putBoolean("IsChanged_TLM", isTransformedLittleMaid_TLM);
+        tag.putBoolean("IsChanged_TLM", isTransformedLittleMaid_TLM());
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
@@ -87,13 +97,21 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
             }
         }
 
-        isTransformedLittleMaid_TLM = tag.getBoolean("IsChanged_TLM");
-        calculateDimensions();
+        setTransformedLittleMaid_TLM(tag.getBoolean("IsChanged_TLM"));
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void onTick(CallbackInfo ci) {
+        var bool = isTransformedLittleMaid_TLM();
+        if (prevTransformedLittleMaid != bool) {
+            prevTransformedLittleMaid = bool;
+            calculateDimensions();
+        }
     }
 
     @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
     public void onGetDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
-        if (this.isTransformedLittleMaid_TLM) {
+        if (isTransformedLittleMaid_TLM()) {
             getModel(Layer.SKIN, Part.HEAD).ifPresent(model -> {
                 IModelCaps caps = this.getCaps();
                 cir.setReturnValue(EntityDimensions.changing(
@@ -104,7 +122,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
 
     @Inject(method = "getActiveEyeHeight", at = @At("HEAD"), cancellable = true)
     public void onGetActiveEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
-        if (this.isTransformedLittleMaid_TLM) {
+        if (isTransformedLittleMaid_TLM()) {
             getModel(Layer.SKIN, Part.HEAD)
                     .ifPresent(model -> cir.setReturnValue(model.getEyeHeight(this.getCaps(), MMPose.convertPose(pose))));
         }
@@ -142,6 +160,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
     @Override
     public void setTextureHolder(TextureHolder textureHolder, Layer layer, Part part) {
         multiModel_TLM.setTextureHolder(textureHolder, layer, part);
+        calculateDimensions();
     }
 
     @Override
@@ -196,12 +215,12 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
 
     @Override
     public boolean isTransformedLittleMaid_TLM() {
-        return isTransformedLittleMaid_TLM;
+        return this.dataTracker.get(TRANSFORMED_LITTLEMAID);
     }
 
     @Override
     public void setTransformedLittleMaid_TLM(boolean isChanged) {
-        isTransformedLittleMaid_TLM = isChanged;
+        this.dataTracker.set(TRANSFORMED_LITTLEMAID, isChanged);
     }
 
     @Inject(method = "tickMovement", at = @At("HEAD"))

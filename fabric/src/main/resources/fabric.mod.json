@@ -22,9 +22,6 @@
       "net.sistr.transformintolittlemaid.fabric.TransformIntoLittleMaidModClientFabric"
     ],
     "server": [
-    ],
-    "modmenu": [
-      "net.sistr.transformintolittlemaid.fabric.LMRBModMenuIntegration"
     ]
   },
   "mixins": [

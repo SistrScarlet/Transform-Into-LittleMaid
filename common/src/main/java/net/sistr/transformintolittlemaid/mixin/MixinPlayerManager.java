@@ -8,8 +8,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.sistr.littlemaidmodelloader.entity.compound.IHasMultiModel;
 import net.sistr.littlemaidmodelloader.network.SyncMultiModelPacket;
 import net.sistr.transformintolittlemaid.layer.NetworkUtil;
-import net.sistr.transformintolittlemaid.network.TransformLittleMaidPacket;
-import net.sistr.transformintolittlemaid.util.LittleMaidTransformable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,7 +22,6 @@ public class MixinPlayerManager {
         NetworkManager.sendToPlayer(player, SyncMultiModelPacket.ID, buf);
         NetworkUtil.getTracker(player).forEach(spe ->
                 NetworkManager.sendToPlayer(spe, SyncMultiModelPacket.ID, buf));
-        TransformLittleMaidPacket.sendS2CPacket(player, ((LittleMaidTransformable) player).isTransformedLittleMaid_TLM());
     }
 
 }

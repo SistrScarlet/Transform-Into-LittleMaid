@@ -27,16 +27,15 @@ public abstract class MixinClientPlayNetworkHandler {
         multiModel.setContract(additional.isContract_TLM());
         LMTextureManager textureManager = LMTextureManager.INSTANCE;
         textureManager.getTexture(additional.getTextureName_TLM()).filter(textureHolder ->
-                multiModel.isAllowChangeTexture(player, textureHolder, IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD))
+                        multiModel.isAllowChangeTexture(player, textureHolder, IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD))
                 .ifPresent(textureHolder -> multiModel.setTextureHolder(textureHolder, IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD));
         for (IHasMultiModel.Part part : IHasMultiModel.Part.values()) {
             String armorName = additional.getArmorTextureName_TLM().getArmor(part)
                     .orElseThrow(() -> new IllegalStateException("テクスチャが存在しません。"));
             textureManager.getTexture(armorName).filter(textureHolder ->
-                    multiModel.isAllowChangeTexture(player, textureHolder, IHasMultiModel.Layer.INNER, part))
+                            multiModel.isAllowChangeTexture(player, textureHolder, IHasMultiModel.Layer.INNER, part))
                     .ifPresent(textureHolder -> multiModel.setTextureHolder(textureHolder, IHasMultiModel.Layer.INNER, part));
         }
-        ((LittleMaidTransformable) player).setTransformedLittleMaid_TLM(additional.isTransformedLittleMaid_TLM());
     }
 
     //リスポ時にコピー、やや無理やり
@@ -59,7 +58,8 @@ public abstract class MixinClientPlayNetworkHandler {
             multiModel.setTextureHolder(oldMultiModel.getTextureHolder(IHasMultiModel.Layer.INNER, part),
                     IHasMultiModel.Layer.INNER, part);
         }
-        ((LittleMaidTransformable) player).setTransformedLittleMaid_TLM(((LittleMaidTransformable) oldPlayer_TLM).isTransformedLittleMaid_TLM());
+        ((LittleMaidTransformable) player).setTransformedLittleMaid_TLM(
+                ((LittleMaidTransformable) oldPlayer_TLM).isTransformedLittleMaid_TLM());
         oldPlayer_TLM = null;
     }
 
