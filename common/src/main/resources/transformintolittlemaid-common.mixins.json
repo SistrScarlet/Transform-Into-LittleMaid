@@ -4,8 +4,6 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "MixinPlayerEntity",
-    "MixinPlayerManager",
-    "MixinPlayerSpawnS2CPacket",
     "MixinServerPlayerEntity"
   ],
   "client": [
