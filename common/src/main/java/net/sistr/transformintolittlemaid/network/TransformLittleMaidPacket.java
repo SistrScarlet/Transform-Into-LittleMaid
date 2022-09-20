@@ -2,6 +2,8 @@ package net.sistr.transformintolittlemaid.network;
 
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -12,11 +14,13 @@ import static net.sistr.transformintolittlemaid.TransformIntoLittleMaidMod.MODID
 public class TransformLittleMaidPacket {
     public static final Identifier ID = new Identifier(MODID, "transform_littlemaid");
 
+    @Environment(EnvType.CLIENT)
     public static void sendC2SPacket(boolean changed) {
         PacketByteBuf buf = createC2SPacket(changed);
         NetworkManager.sendToServer(ID, buf);
     }
 
+    @Environment(EnvType.CLIENT)
     public static PacketByteBuf createC2SPacket(boolean changed) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBoolean(changed);

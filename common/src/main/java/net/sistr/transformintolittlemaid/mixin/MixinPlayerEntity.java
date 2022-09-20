@@ -22,6 +22,7 @@ import net.sistr.littlemaidmodelloader.resource.holder.TextureHolder;
 import net.sistr.littlemaidmodelloader.resource.manager.LMModelManager;
 import net.sistr.littlemaidmodelloader.resource.manager.LMTextureManager;
 import net.sistr.littlemaidmodelloader.resource.util.TextureColors;
+import net.sistr.transformintolittlemaid.network.RequestSyncMultiModelPacket;
 import net.sistr.transformintolittlemaid.util.LittleMaidTransformable;
 import net.sistr.transformintolittlemaid.util.WaitTime;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,6 +40,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
             = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private int waitTime_TILM = 0;
     private boolean prevTransformedLittleMaid;
+    private boolean syncMultiModel;
 
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
         super(type, worldIn);
@@ -106,6 +108,9 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
         if (prevTransformedLittleMaid != bool) {
             prevTransformedLittleMaid = bool;
             calculateDimensions();
+        }
+        if (world.isClient && syncMultiModel) {
+            RequestSyncMultiModelPacket.sendC2SPacket((PlayerEntity) (Object) this);
         }
     }
 
