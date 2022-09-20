@@ -6,6 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.sistr.littlemaidmodelloader.entity.compound.IHasMultiModel;
 import net.sistr.littlemaidmodelloader.network.SyncMultiModelPacket;
@@ -32,12 +33,14 @@ public class RequestSyncMultiModelPacket {
 
     public static void receiveC2SPacket(PacketByteBuf buf, NetworkManager.PacketContext ctx) {
         var uuid = buf.readUuid();
-        ctx.queue(() -> transformC2S(ctx.getPlayer(), uuid));
+        ctx.queue(() -> receiveC2S(ctx.getPlayer(), uuid));
     }
 
-    public static void transformC2S(PlayerEntity player, UUID uuid) {
+    public static void receiveC2S(PlayerEntity player, UUID uuid) {
         var other = player.world.getPlayerByUuid(uuid);
         if (other != null)
-            SyncMultiModelPacket.sendS2CPacket(other, (IHasMultiModel) other);
+            NetworkManager.sendToPlayer((ServerPlayerEntity) other,
+                    SyncMultiModelPacket.ID,
+                    SyncMultiModelPacket.createS2CPacket(other, (IHasMultiModel) other));
     }
 }
