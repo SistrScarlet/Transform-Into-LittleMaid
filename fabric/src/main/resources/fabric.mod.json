@@ -16,12 +16,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.sistr.transformintolittlemaid.fabric.TransformIntoLittleMaidModFabric"
+      "net.sistr.transformintolittlemaid.fabric.TILMFabric"
     ],
     "client": [
-      "net.sistr.transformintolittlemaid.fabric.TransformIntoLittleMaidModClientFabric"
-    ],
-    "server": [
+      "net.sistr.transformintolittlemaid.fabric.TILMFabric"
     ]
   },
   "mixins": [
@@ -30,10 +28,10 @@
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.19.2",
-    "architectury": ">=6.2.43",
-    "modmenu": ">=4.0.6",
-    "cloth-config": ">=8.2.88",
-    "littlemaidmodelloader": ">=5.0.0"
+    "minecraft": ">=1.19",
+    "architectury": ">=6.3.0",
+    "modmenu": ">=4.0.0",
+    "cloth-config": ">=8.2.0",
+    "littlemaidmodelloader": ">=5.1.0"
   }
 }

@@ -152,23 +152,23 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
     }
 
     @Override
-    public TextureColors getColor() {
-        return multiModel_TLM.getColor();
+    public TextureColors getColorMM() {
+        return multiModel_TLM.getColorMM();
     }
 
     @Override
-    public void setColor(TextureColors textureColors) {
-        multiModel_TLM.setColor(textureColors);
+    public void setColorMM(TextureColors textureColors) {
+        multiModel_TLM.setColorMM(textureColors);
     }
 
     @Override
-    public boolean isContract() {
-        return multiModel_TLM.isContract();
+    public boolean isContractMM() {
+        return multiModel_TLM.isContractMM();
     }
 
     @Override
-    public void setContract(boolean b) {
-        multiModel_TLM.setContract(b);
+    public void setContractMM(boolean b) {
+        multiModel_TLM.setContractMM(b);
     }
 
     @Override

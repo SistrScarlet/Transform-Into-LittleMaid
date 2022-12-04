@@ -21,8 +21,8 @@ public abstract class MixinServerPlayerEntity extends MixinPlayerEntity {
     private void onCopyFrom(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
         IHasMultiModel multiModel = this;
         IHasMultiModel oldMultiModel = (IHasMultiModel) oldPlayer;
-        multiModel.setColor(oldMultiModel.getColor());
-        multiModel.setContract(oldMultiModel.isContract());
+        multiModel.setColorMM(oldMultiModel.getColorMM());
+        multiModel.setContractMM(oldMultiModel.isContractMM());
         multiModel.setTextureHolder(oldMultiModel.getTextureHolder(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD),
                 IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD);
         for (IHasMultiModel.Part part : IHasMultiModel.Part.values()) {
