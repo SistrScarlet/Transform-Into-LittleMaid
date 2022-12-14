@@ -22,6 +22,12 @@ configurations {
 repositories {
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases/" }
+    maven {
+        url "https://maven.jamieswhiteshirt.com/libs-release"
+        content {
+            includeGroup "com.jamieswhiteshirt"
+        }
+    }
 }
 
 dependencies {
@@ -37,6 +43,8 @@ dependencies {
     }
 
     modImplementationMapped fileTree(dir: './mods', include: '*.jar')
+
+    include modImplementation("com.jamieswhiteshirt:reach-entity-attributes:${rootProject.reach_entity_attributes_version}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
