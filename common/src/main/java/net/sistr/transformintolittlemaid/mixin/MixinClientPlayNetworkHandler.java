@@ -31,8 +31,8 @@ public abstract class MixinClientPlayNetworkHandler {
         if (player == null || oldPlayer_TLM == null) return;
         IHasMultiModel multiModel = (IHasMultiModel) player;
         IHasMultiModel oldMultiModel = (IHasMultiModel) oldPlayer_TLM;
-        multiModel.setColor(oldMultiModel.getColor());
-        multiModel.setContract(oldMultiModel.isContract());
+        multiModel.setColorMM(oldMultiModel.getColorMM());
+        multiModel.setContractMM(oldMultiModel.isContractMM());
         multiModel.setTextureHolder(oldMultiModel.getTextureHolder(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD),
                 IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD);
         for (IHasMultiModel.Part part : IHasMultiModel.Part.values()) {

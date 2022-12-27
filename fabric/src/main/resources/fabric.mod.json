@@ -31,9 +31,9 @@
   "depends": {
     "fabric": "*",
     "minecraft": ">=1.18.2",
-    "architectury": ">=4.4.59",
-    "modmenu": ">=3.2.2",
-    "cloth-config": ">=6.2.62",
-    "littlemaidmodelloader": ">=4.4.0"
+    "architectury": ">=4.10.0",
+    "modmenu": ">=3.2.0",
+    "cloth-config": ">=6.4.0",
+    "littlemaidmodelloader": ">=4.5.0"
   }
 }

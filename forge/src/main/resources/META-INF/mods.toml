@@ -28,20 +28,20 @@ side = "BOTH"
 [[dependencies.transformintolittlemaid]]
 modId = "architectury"
 mandatory = true
-versionRange = "[4.4.59,)"
+versionRange = "[4.10.0,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId = "cloth_config"
 mandatory = true
-versionRange = "[6.2.62,)"
+versionRange = "[6.4.0,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.transformintolittlemaid]]
 modId = "littlemaidmodelloader"
 mandatory = true
-versionRange = "[4.4.0,)"
+versionRange = "[4.5.0,)"
 ordering = "AFTER"
 side = "BOTH"
