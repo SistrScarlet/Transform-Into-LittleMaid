@@ -42,12 +42,12 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
     private boolean prevTransformedLittleMaid;
     private boolean syncMultiModel;
 
-    protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World worldIn) {
-        super(type, worldIn);
+    protected MixinPlayerEntity(EntityType<? extends LivingEntity> entityType, World world) {
+        super(entityType, world);
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    public void onInit(World world, BlockPos pos, float yaw, GameProfile gameProfile, PlayerPublicKey publicKey, CallbackInfo ci) {
+    public void onInit(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
         this.multiModel_TLM = new MultiModelCompound(this,
                 LMTextureManager.INSTANCE.getTexture("default")
                         .orElseThrow(() -> new IllegalStateException("デフォルトモデルが存在しません。")),
@@ -81,7 +81,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
             prevTransformedLittleMaid = bool;
             calculateDimensions();
         }
-        if (world.isClient && !syncMultiModel) {
+        if (getWorld().isClient && !syncMultiModel) {
             syncMultiModel = true;
             RequestSyncMultiModelPacket.sendC2SPacket((PlayerEntity) (Object) this);
         }

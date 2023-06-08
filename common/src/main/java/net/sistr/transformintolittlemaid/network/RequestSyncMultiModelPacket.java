@@ -37,7 +37,7 @@ public class RequestSyncMultiModelPacket {
     }
 
     public static void receiveC2S(PlayerEntity player, UUID uuid) {
-        var other = player.world.getPlayerByUuid(uuid);
+        var other = player.getWorld().getPlayerByUuid(uuid);
         if (other != null)
             NetworkManager.sendToPlayer((ServerPlayerEntity) other,
                     SyncMultiModelPacket.ID,

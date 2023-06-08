@@ -9,7 +9,7 @@ public class NetworkUtil {
 
     //めんどくさいのでプレイヤー全員
     public static Stream<ServerPlayerEntity> getTracker(Entity entity) {
-        return entity.world.getPlayers().stream().map(p -> (ServerPlayerEntity) p);
+        return entity.getWorld().getPlayers().stream().map(p -> (ServerPlayerEntity) p);
     }
 
 }
