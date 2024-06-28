@@ -23,17 +23,17 @@ public abstract class MixinClientPlayNetworkHandler {
     private ClientPlayerEntity oldPlayer_TLM;
 
     private static void readAdditionalPacket(PlayerEntity player, IHasMultiModel multiModel, AdditionalPlayerSpawnPacket additional) {
-        multiModel.setColor(additional.getColor_TLM());
-        multiModel.setContract(additional.isContract_TLM());
+        multiModel.setColorMM(additional.getColor_TLM());
+        multiModel.setContractMM(additional.isContract_TLM());
         LMTextureManager textureManager = LMTextureManager.INSTANCE;
         textureManager.getTexture(additional.getTextureName_TLM()).filter(textureHolder ->
-                multiModel.isAllowChangeTexture(player, textureHolder, IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD))
+                        multiModel.isAllowChangeTexture(player, textureHolder, IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD))
                 .ifPresent(textureHolder -> multiModel.setTextureHolder(textureHolder, IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD));
         for (IHasMultiModel.Part part : IHasMultiModel.Part.values()) {
             String armorName = additional.getArmorTextureName_TLM().getArmor(part)
                     .orElseThrow(() -> new IllegalStateException("テクスチャが存在しません。"));
             textureManager.getTexture(armorName).filter(textureHolder ->
-                    multiModel.isAllowChangeTexture(player, textureHolder, IHasMultiModel.Layer.INNER, part))
+                            multiModel.isAllowChangeTexture(player, textureHolder, IHasMultiModel.Layer.INNER, part))
                     .ifPresent(textureHolder -> multiModel.setTextureHolder(textureHolder, IHasMultiModel.Layer.INNER, part));
         }
         ((LittleMaidTransformable) player).setTransformedLittleMaid_TLM(additional.isTransformedLittleMaid_TLM());
@@ -51,8 +51,8 @@ public abstract class MixinClientPlayNetworkHandler {
         if (player == null || oldPlayer_TLM == null) return;
         IHasMultiModel multiModel = (IHasMultiModel) player;
         IHasMultiModel oldMultiModel = (IHasMultiModel) oldPlayer_TLM;
-        multiModel.setColor(oldMultiModel.getColor());
-        multiModel.setContract(oldMultiModel.isContract());
+        multiModel.setColorMM(oldMultiModel.getColorMM());
+        multiModel.setContractMM(oldMultiModel.isContractMM());
         multiModel.setTextureHolder(oldMultiModel.getTextureHolder(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD),
                 IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD);
         for (IHasMultiModel.Part part : IHasMultiModel.Part.values()) {

@@ -89,7 +89,7 @@ public class LittleMaidPlayerRenderer extends PlayerEntityRenderer {
             UseAction action = activeStack.getItem().getUseAction(activeStack);
             model.setCapsValue(IModelCaps.caps_aimedBow,
                     action == UseAction.BOW || action == UseAction.CROSSBOW);
-            model.setCapsValue(IModelCaps.caps_isContract, ((IHasMultiModel) entity).isContract());
+            model.setCapsValue(IModelCaps.caps_isContract, ((IHasMultiModel) entity).isContractMM());
             model.setCapsValue(IModelCaps.caps_isWait, entity instanceof WaitTime && 60 < ((WaitTime) entity).getWaitTime_TILM());
         }
     }

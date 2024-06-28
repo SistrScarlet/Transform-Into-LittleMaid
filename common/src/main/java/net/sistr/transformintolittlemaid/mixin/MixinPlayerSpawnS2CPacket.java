@@ -32,8 +32,8 @@ public class MixinPlayerSpawnS2CPacket implements AdditionalPlayerSpawnPacket {
             armorTextureName_TLM.setArmor(hasMultiModel.getTextureHolder(IHasMultiModel.Layer.INNER, part)
                     .getTextureName(), part);
         }
-        color_TLM = hasMultiModel.getColor();
-        isContract_TLM = hasMultiModel.isContract();
+        color_TLM = hasMultiModel.getColorMM();
+        isContract_TLM = hasMultiModel.isContractMM();
         isTransformedLittleMaid_TLM = ((LittleMaidTransformable) player).isTransformedLittleMaid_TLM();
     }
 
