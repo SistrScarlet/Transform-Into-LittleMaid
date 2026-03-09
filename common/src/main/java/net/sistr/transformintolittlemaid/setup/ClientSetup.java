@@ -10,12 +10,10 @@ import net.sistr.transformintolittlemaid.layer.EventRegister;
 public class ClientSetup {
 
     public static void init() {
-        //キーの登録
+        // キーの登録
         KeyRegister.register(KeyManager.TRANSFORM);
         KeyRegister.register(KeyManager.SELECT_MODEL);
 
         EventRegister.registerKeyTick(KeyManager::keyTick);
-
     }
-
 }

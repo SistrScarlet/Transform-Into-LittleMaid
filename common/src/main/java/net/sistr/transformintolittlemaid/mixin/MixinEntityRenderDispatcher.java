@@ -23,16 +23,17 @@ public class MixinEntityRenderDispatcher {
     private LittleMaidPlayerRenderer renderer_TLM;
 
     @Inject(method = "getRenderer", at = @At("HEAD"), cancellable = true)
-    public <T extends Entity> void onGetRenderer(T entity, CallbackInfoReturnable<EntityRenderer<? super T>> cir) {
-        if (entity instanceof PlayerEntity && ((LittleMaidTransformable) entity).isTransformedLittleMaid_TLM()) {
+    public <T extends Entity> void onGetRenderer(
+            T entity, CallbackInfoReturnable<EntityRenderer<? super T>> cir) {
+        if (entity instanceof PlayerEntity
+                && ((LittleMaidTransformable) entity).isTransformedLittleMaid_TLM()) {
             cir.setReturnValue((EntityRenderer<? super T>) renderer_TLM);
         }
     }
 
     @Inject(method = "reload", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onReload(ResourceManager manager, CallbackInfo ci, EntityRendererFactory.Context context) {
+    public void onReload(
+            ResourceManager manager, CallbackInfo ci, EntityRendererFactory.Context context) {
         renderer_TLM = new LittleMaidPlayerRenderer(context);
     }
-
-
 }

@@ -13,5 +13,4 @@ public class EventRegister {
     public static void keyTick() {
         keyTickerList.forEach(Runnable::run);
     }
-
 }

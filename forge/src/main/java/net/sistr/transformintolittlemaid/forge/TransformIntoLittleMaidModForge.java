@@ -13,7 +13,8 @@ import net.sistr.transformintolittlemaid.setup.ModSetup;
 public class TransformIntoLittleMaidModForge {
 
     public TransformIntoLittleMaidModForge() {
-        EventBuses.registerModEventBus(TransformIntoLittleMaidMod.MODID, FMLJavaModLoadingContext.get().getModEventBus());
+        EventBuses.registerModEventBus(
+                TransformIntoLittleMaidMod.MODID, FMLJavaModLoadingContext.get().getModEventBus());
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonInit);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientInit);
     }
@@ -25,5 +26,4 @@ public class TransformIntoLittleMaidModForge {
     public void clientInit(FMLClientSetupEvent event) {
         ClientSetup.init();
     }
-
 }

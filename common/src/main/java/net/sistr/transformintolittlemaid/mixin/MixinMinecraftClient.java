@@ -17,5 +17,4 @@ public class MixinMinecraftClient {
     public void onHandleInputEvents(CallbackInfo ci) {
         EventRegister.keyTick();
     }
-
 }

@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinClientPlayNetworkHandler {
     private ClientPlayerEntity oldPlayer_TLM;
 
-    //リスポ時にコピー、やや無理やり
+    // リスポ時にコピー、やや無理やり
     @Inject(method = "onPlayerRespawn", at = @At("HEAD"))
     public void preHandleRespawn(PlayerRespawnS2CPacket packet, CallbackInfo ci) {
         oldPlayer_TLM = MinecraftClient.getInstance().player;
@@ -33,15 +33,19 @@ public abstract class MixinClientPlayNetworkHandler {
         IHasMultiModel oldMultiModel = (IHasMultiModel) oldPlayer_TLM;
         multiModel.setColorMM(oldMultiModel.getColorMM());
         multiModel.setContractMM(oldMultiModel.isContractMM());
-        multiModel.setTextureHolder(oldMultiModel.getTextureHolder(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD),
-                IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD);
+        multiModel.setTextureHolder(
+                oldMultiModel.getTextureHolder(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD),
+                IHasMultiModel.Layer.SKIN,
+                IHasMultiModel.Part.HEAD);
         for (IHasMultiModel.Part part : IHasMultiModel.Part.values()) {
-            multiModel.setTextureHolder(oldMultiModel.getTextureHolder(IHasMultiModel.Layer.INNER, part),
-                    IHasMultiModel.Layer.INNER, part);
+            multiModel.setTextureHolder(
+                    oldMultiModel.getTextureHolder(IHasMultiModel.Layer.INNER, part),
+                    IHasMultiModel.Layer.INNER,
+                    part);
         }
-        ((LittleMaidTransformable) player).setTransformedLittleMaid_TLM(
-                ((LittleMaidTransformable) oldPlayer_TLM).isTransformedLittleMaid_TLM());
+        ((LittleMaidTransformable) player)
+                .setTransformedLittleMaid_TLM(
+                        ((LittleMaidTransformable) oldPlayer_TLM).isTransformedLittleMaid_TLM());
         oldPlayer_TLM = null;
     }
-
 }

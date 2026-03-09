@@ -23,7 +23,7 @@ import net.sistr.littlemaidmodelloader.multimodel.layer.MMMatrixStack;
 import net.sistr.littlemaidmodelloader.multimodel.layer.MMVertexConsumer;
 import net.sistr.transformintolittlemaid.util.WaitTime;
 
-//MixinでPlayerEntityにIHasMultiModelをブチこんでるため、ジェネリクスはRawで使う
+// MixinでPlayerEntityにIHasMultiModelをブチこんでるため、ジェネリクスはRawで使う
 @Environment(EnvType.CLIENT)
 public class LittleMaidPlayerRenderer extends PlayerEntityRenderer {
     private static final Identifier NULL_TEXTURE = new Identifier(LMMLMod.MODID, "null");
@@ -35,43 +35,76 @@ public class LittleMaidPlayerRenderer extends PlayerEntityRenderer {
     }
 
     @Override
-    public void render(AbstractClientPlayerEntity abstractClientPlayerEntity, float yaw, float tickDelta,
-                       MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-        this.model.render(abstractClientPlayerEntity, yaw, tickDelta, matrixStack, vertexConsumerProvider, i);
+    public void render(
+            AbstractClientPlayerEntity abstractClientPlayerEntity,
+            float yaw,
+            float tickDelta,
+            MatrixStack matrixStack,
+            VertexConsumerProvider vertexConsumerProvider,
+            int i) {
+        this.model.render(
+                abstractClientPlayerEntity, yaw, tickDelta, matrixStack, vertexConsumerProvider, i);
     }
 
     @Override
-    public void renderRightArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player) {
-        ModelRenderer.setParam(new MMMatrixStack(matrices), new MMVertexConsumer(vertexConsumers.getBuffer(getModel().getLayer(getTexture(player)))),
-                light, OverlayTexture.DEFAULT_UV, 1F, 1F, 1F, 1F);
+    public void renderRightArm(
+            MatrixStack matrices,
+            VertexConsumerProvider vertexConsumers,
+            int light,
+            AbstractClientPlayerEntity player) {
+        ModelRenderer.setParam(
+                new MMMatrixStack(matrices),
+                new MMVertexConsumer(
+                        vertexConsumers.getBuffer(getModel().getLayer(getTexture(player)))),
+                light,
+                OverlayTexture.DEFAULT_UV,
+                1F,
+                1F,
+                1F,
+                1F);
         IHasMultiModel hasMultiModel = ((IHasMultiModel) player);
-        hasMultiModel.getModel(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD)
+        hasMultiModel
+                .getModel(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD)
                 .filter(m -> m instanceof ModelMultiBase)
                 .map(model -> ((ModelMultiBase) model))
-                .ifPresent(model -> {
-                    model.animateModel(hasMultiModel.getCaps(), 0f, 0f, 0f);
-                    model.setAngles(hasMultiModel.getCaps(), 0f, 0f, 0f, 0f, 0f);
-                    model.renderFirstPersonHand(hasMultiModel.getCaps());
-                });
+                .ifPresent(
+                        model -> {
+                            model.animateModel(hasMultiModel.getCaps(), 0f, 0f, 0f);
+                            model.setAngles(hasMultiModel.getCaps(), 0f, 0f, 0f, 0f, 0f);
+                            model.renderFirstPersonHand(hasMultiModel.getCaps());
+                        });
     }
 
     @Override
-    public void renderLeftArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player) {
+    public void renderLeftArm(
+            MatrixStack matrices,
+            VertexConsumerProvider vertexConsumers,
+            int light,
+            AbstractClientPlayerEntity player) {
         matrices.push();
         matrices.scale(-1F, 1F, 1F);
-        ModelRenderer.setParam(new MMMatrixStack(matrices), new MMVertexConsumer(vertexConsumers.getBuffer(getModel().getLayer(getTexture(player)))),
-                light, OverlayTexture.DEFAULT_UV, 1F, 1F, 1F, 1F);
+        ModelRenderer.setParam(
+                new MMMatrixStack(matrices),
+                new MMVertexConsumer(
+                        vertexConsumers.getBuffer(getModel().getLayer(getTexture(player)))),
+                light,
+                OverlayTexture.DEFAULT_UV,
+                1F,
+                1F,
+                1F,
+                1F);
         IHasMultiModel hasMultiModel = ((IHasMultiModel) player);
-        hasMultiModel.getModel(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD)
+        hasMultiModel
+                .getModel(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD)
                 .filter(m -> m instanceof ModelMultiBase)
                 .ifPresent(model -> model.renderFirstPersonHand(hasMultiModel.getCaps()));
         matrices.pop();
     }
 
-
     @Override
     public Identifier getTexture(AbstractClientPlayerEntity abstractClientPlayerEntity) {
-        return ((IHasMultiModel) abstractClientPlayerEntity).getTexture(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD, false)
+        return ((IHasMultiModel) abstractClientPlayerEntity)
+                .getTexture(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD, false)
                 .orElse(NULL_TEXTURE);
     }
 
@@ -87,11 +120,14 @@ public class LittleMaidPlayerRenderer extends PlayerEntityRenderer {
             if (!(entity instanceof PlayerEntity)) return;
             ItemStack activeStack = entity.getActiveItem();
             UseAction action = activeStack.getItem().getUseAction(activeStack);
-            model.setCapsValue(IModelCaps.caps_aimedBow,
+            model.setCapsValue(
+                    IModelCaps.caps_aimedBow,
                     action == UseAction.BOW || action == UseAction.CROSSBOW);
-            model.setCapsValue(IModelCaps.caps_isContract, ((IHasMultiModel) entity).isContractMM());
-            model.setCapsValue(IModelCaps.caps_isWait, entity instanceof WaitTime && 60 < ((WaitTime) entity).getWaitTime_TILM());
+            model.setCapsValue(
+                    IModelCaps.caps_isContract, ((IHasMultiModel) entity).isContractMM());
+            model.setCapsValue(
+                    IModelCaps.caps_isWait,
+                    entity instanceof WaitTime && 60 < ((WaitTime) entity).getWaitTime_TILM());
         }
     }
-
 }

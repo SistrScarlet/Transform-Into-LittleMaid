@@ -1,7 +1,10 @@
 package net.sistr.transformintolittlemaid.network;
 
+import static net.sistr.transformintolittlemaid.TransformIntoLittleMaidMod.MODID;
+
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
+import java.util.UUID;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,10 +13,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.sistr.littlemaidmodelloader.entity.compound.IHasMultiModel;
 import net.sistr.littlemaidmodelloader.network.SyncMultiModelPacket;
-
-import java.util.UUID;
-
-import static net.sistr.transformintolittlemaid.TransformIntoLittleMaidMod.MODID;
 
 public class RequestSyncMultiModelPacket {
     public static final Identifier ID = new Identifier(MODID, "request_sync_multi_model");
@@ -39,7 +38,8 @@ public class RequestSyncMultiModelPacket {
     public static void receiveC2S(PlayerEntity player, UUID uuid) {
         var other = player.getWorld().getPlayerByUuid(uuid);
         if (other != null)
-            NetworkManager.sendToPlayer((ServerPlayerEntity) other,
+            NetworkManager.sendToPlayer(
+                    (ServerPlayerEntity) other,
                     SyncMultiModelPacket.ID,
                     SyncMultiModelPacket.createS2CPacket(other, (IHasMultiModel) other));
     }

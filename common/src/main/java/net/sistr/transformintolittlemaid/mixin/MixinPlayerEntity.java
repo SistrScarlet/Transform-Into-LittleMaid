@@ -1,6 +1,7 @@
 package net.sistr.transformintolittlemaid.mixin;
 
 import com.mojang.authlib.GameProfile;
+import java.util.Optional;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -8,7 +9,6 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -31,13 +31,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Optional;
-
 @Mixin(PlayerEntity.class)
-public abstract class MixinPlayerEntity extends LivingEntity implements IHasMultiModel, LittleMaidTransformable, WaitTime {
+public abstract class MixinPlayerEntity extends LivingEntity
+        implements IHasMultiModel, LittleMaidTransformable, WaitTime {
     private MultiModelCompound multiModel_TLM;
-    private static final TrackedData<Boolean> TRANSFORMED_LITTLEMAID
-            = DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> TRANSFORMED_LITTLEMAID =
+            DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private int waitTime_TILM = 0;
     private boolean prevTransformedLittleMaid;
     private boolean syncMultiModel;
@@ -47,12 +46,17 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    public void onInit(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
-        this.multiModel_TLM = new MultiModelCompound(this,
-                LMTextureManager.INSTANCE.getTexture("default")
-                        .orElseThrow(() -> new IllegalStateException("デフォルトモデルが存在しません。")),
-                LMTextureManager.INSTANCE.getTexture("default")
-                        .orElseThrow(() -> new IllegalStateException("デフォルトモデルが存在しません。")));
+    public void onInit(
+            World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
+        this.multiModel_TLM =
+                new MultiModelCompound(
+                        this,
+                        LMTextureManager.INSTANCE
+                                .getTexture("default")
+                                .orElseThrow(() -> new IllegalStateException("デフォルトモデルが存在しません。")),
+                        LMTextureManager.INSTANCE
+                                .getTexture("default")
+                                .orElseThrow(() -> new IllegalStateException("デフォルトモデルが存在しません。")));
     }
 
     @Inject(method = "initDataTracker", at = @At("RETURN"))
@@ -90,44 +94,54 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
     @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
     public void onGetDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         if (isTransformedLittleMaid_TLM()) {
-            getModel(Layer.SKIN, Part.HEAD).ifPresent(model -> {
-                IModelCaps caps = this.getCaps();
-                cir.setReturnValue(EntityDimensions.changing(
-                        model.getWidth(caps, MMPose.convertPose(pose)), model.getHeight(caps, MMPose.convertPose(pose))));
-            });
+            getModel(Layer.SKIN, Part.HEAD)
+                    .ifPresent(
+                            model -> {
+                                IModelCaps caps = this.getCaps();
+                                cir.setReturnValue(
+                                        EntityDimensions.changing(
+                                                model.getWidth(caps, MMPose.convertPose(pose)),
+                                                model.getHeight(caps, MMPose.convertPose(pose))));
+                            });
         }
     }
 
     @Inject(method = "getActiveEyeHeight", at = @At("HEAD"), cancellable = true)
-    public void onGetActiveEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
+    public void onGetActiveEyeHeight(
+            EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
         if (isTransformedLittleMaid_TLM()) {
             getModel(Layer.SKIN, Part.HEAD)
-                    .ifPresent(model -> cir.setReturnValue(model.getEyeHeight(this.getCaps(), MMPose.convertPose(pose))));
+                    .ifPresent(
+                            model ->
+                                    cir.setReturnValue(
+                                            model.getEyeHeight(
+                                                    this.getCaps(), MMPose.convertPose(pose))));
         }
     }
 
-    //上になんか乗ってるやつのオフセット
+    // 上になんか乗ってるやつのオフセット
     @Override
     public double getMountedHeightOffset() {
         if (!isTransformedLittleMaid_TLM()) {
             return super.getMountedHeightOffset();
         }
-        IMultiModel model = getModel(Layer.SKIN, Part.HEAD)
-                .orElse(LMModelManager.INSTANCE.getDefaultModel());
+        IMultiModel model =
+                getModel(Layer.SKIN, Part.HEAD).orElse(LMModelManager.INSTANCE.getDefaultModel());
         return model.getMountedYOffset(getCaps());
     }
 
-    //騎乗時のオフセット
+    // 騎乗時のオフセット
     @Inject(method = "getHeightOffset", at = @At("HEAD"), cancellable = true)
     public void getHeightOffset(CallbackInfoReturnable<Double> cir) {
         if (isTransformedLittleMaid_TLM()) {
-            IMultiModel model = getModel(Layer.SKIN, Part.HEAD)
-                    .orElse(LMModelManager.INSTANCE.getDefaultModel());
+            IMultiModel model =
+                    getModel(Layer.SKIN, Part.HEAD)
+                            .orElse(LMModelManager.INSTANCE.getDefaultModel());
             cir.setReturnValue((double) (model.getyOffset(getCaps()) - getHeight()));
         }
     }
 
-    //防具の更新
+    // 防具の更新
     @Inject(method = "equipStack", at = @At("HEAD"))
     public void onEquipStack(EquipmentSlot slot, ItemStack stack, CallbackInfo ci) {
         if (slot.getType() == EquipmentSlot.Type.ARMOR) {
@@ -136,7 +150,8 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
     }
 
     @Override
-    public boolean isAllowChangeTexture(Entity entity, TextureHolder textureHolder, Layer layer, Part part) {
+    public boolean isAllowChangeTexture(
+            Entity entity, TextureHolder textureHolder, Layer layer, Part part) {
         return multiModel_TLM.isAllowChangeTexture(entity, textureHolder, layer, part);
     }
 
@@ -208,7 +223,9 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IHasMult
 
     @Inject(method = "tickMovement", at = @At("HEAD"))
     public void onTickMovement(CallbackInfo ci) {
-        if (MathHelper.approximatelyEquals(0, stepBobbingAmount) && !handSwinging && !isUsingItem()) {
+        if (MathHelper.approximatelyEquals(0, stepBobbingAmount)
+                && !handSwinging
+                && !isUsingItem()) {
             waitTime_TILM++;
         } else {
             waitTime_TILM = 0;

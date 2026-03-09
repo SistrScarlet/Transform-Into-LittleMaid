@@ -5,5 +5,4 @@ public interface LittleMaidTransformable {
     boolean isTransformedLittleMaid_TLM();
 
     void setTransformedLittleMaid_TLM(boolean transformed);
-
 }

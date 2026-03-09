@@ -13,14 +13,16 @@ import org.lwjgl.glfw.GLFW;
 
 @Environment(EnvType.CLIENT)
 public class KeyManager {
-    public static final KeyBinding TRANSFORM = new KeyBinding(
-            TransformIntoLittleMaidMod.MODID + ".key.transform",
-            GLFW.GLFW_KEY_APOSTROPHE,
-            "key.categories." + TransformIntoLittleMaidMod.MODID);
-    public static final KeyBinding SELECT_MODEL = new KeyBinding(
-            TransformIntoLittleMaidMod.MODID + ".key.select_model",
-            GLFW.GLFW_KEY_LEFT_BRACKET,
-            "key.categories." + TransformIntoLittleMaidMod.MODID);
+    public static final KeyBinding TRANSFORM =
+            new KeyBinding(
+                    TransformIntoLittleMaidMod.MODID + ".key.transform",
+                    GLFW.GLFW_KEY_APOSTROPHE,
+                    "key.categories." + TransformIntoLittleMaidMod.MODID);
+    public static final KeyBinding SELECT_MODEL =
+            new KeyBinding(
+                    TransformIntoLittleMaidMod.MODID + ".key.select_model",
+                    GLFW.GLFW_KEY_LEFT_BRACKET,
+                    "key.categories." + TransformIntoLittleMaidMod.MODID);
 
     public static void keyTick() {
         if (TRANSFORM.wasPressed()) pressTransform();
@@ -34,7 +36,6 @@ public class KeyManager {
             TransformLittleMaidPacket.sendC2SPacket(changed);
             mc.player.calculateDimensions();
         }
-
     }
 
     private static void pressKeySelect() {
@@ -42,5 +43,4 @@ public class KeyManager {
         if (mc.world != null && mc.player != null)
             mc.setScreen(new ModelSelectScreen(Text.of(""), mc.world, mc.player));
     }
-
 }

@@ -23,13 +23,18 @@ public abstract class MixinServerPlayerEntity extends MixinPlayerEntity {
         IHasMultiModel oldMultiModel = (IHasMultiModel) oldPlayer;
         multiModel.setColorMM(oldMultiModel.getColorMM());
         multiModel.setContractMM(oldMultiModel.isContractMM());
-        multiModel.setTextureHolder(oldMultiModel.getTextureHolder(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD),
-                IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD);
+        multiModel.setTextureHolder(
+                oldMultiModel.getTextureHolder(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD),
+                IHasMultiModel.Layer.SKIN,
+                IHasMultiModel.Part.HEAD);
         for (IHasMultiModel.Part part : IHasMultiModel.Part.values()) {
-            multiModel.setTextureHolder(oldMultiModel.getTextureHolder(IHasMultiModel.Layer.INNER, part),
-                    IHasMultiModel.Layer.INNER, part);
+            multiModel.setTextureHolder(
+                    oldMultiModel.getTextureHolder(IHasMultiModel.Layer.INNER, part),
+                    IHasMultiModel.Layer.INNER,
+                    part);
         }
-        ((LittleMaidTransformable) this).setTransformedLittleMaid_TLM(
-                ((LittleMaidTransformable) oldPlayer).isTransformedLittleMaid_TLM());
+        ((LittleMaidTransformable) this)
+                .setTransformedLittleMaid_TLM(
+                        ((LittleMaidTransformable) oldPlayer).isTransformedLittleMaid_TLM());
     }
 }

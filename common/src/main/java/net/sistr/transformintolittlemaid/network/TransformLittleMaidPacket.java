@@ -1,5 +1,7 @@
 package net.sistr.transformintolittlemaid.network;
 
+import static net.sistr.transformintolittlemaid.TransformIntoLittleMaidMod.MODID;
+
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -8,8 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.sistr.transformintolittlemaid.util.LittleMaidTransformable;
-
-import static net.sistr.transformintolittlemaid.TransformIntoLittleMaidMod.MODID;
 
 public class TransformLittleMaidPacket {
     public static final Identifier ID = new Identifier(MODID, "transform_littlemaid");
@@ -36,5 +36,4 @@ public class TransformLittleMaidPacket {
         ((LittleMaidTransformable) player).setTransformedLittleMaid_TLM(transformed);
         player.calculateDimensions();
     }
-
 }

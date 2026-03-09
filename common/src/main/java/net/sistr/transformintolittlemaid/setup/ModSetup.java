@@ -7,5 +7,4 @@ public class ModSetup {
     public static void init() {
         Networking.init();
     }
-
 }

@@ -11,5 +11,4 @@ public class KeyRegister {
     public static void register(KeyBinding key) {
         KeyMappingRegistry.register(key);
     }
-
 }
