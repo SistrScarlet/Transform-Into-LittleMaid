@@ -36,11 +36,11 @@ public class RequestSyncMultiModelPacket {
     }
 
     public static void receiveC2S(PlayerEntity player, UUID uuid) {
-        var other = player.getWorld().getPlayerByUuid(uuid);
-        if (other != null)
+        var target = player.getWorld().getPlayerByUuid(uuid);
+        if (target != null)
             NetworkManager.sendToPlayer(
-                    (ServerPlayerEntity) other,
+                    (ServerPlayerEntity) player,
                     SyncMultiModelPacket.ID,
-                    SyncMultiModelPacket.createS2CPacket(other, (IHasMultiModel) other));
+                    SyncMultiModelPacket.createS2CPacket(target, (IHasMultiModel) target));
     }
 }

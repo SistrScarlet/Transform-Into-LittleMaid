@@ -48,15 +48,11 @@ public abstract class MixinPlayerEntity extends LivingEntity
     @Inject(method = "<init>", at = @At("RETURN"))
     public void onInit(
             World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
-        this.multiModel_TLM =
-                new MultiModelCompound(
-                        this,
-                        LMTextureManager.INSTANCE
-                                .getTexture("default")
-                                .orElseThrow(() -> new IllegalStateException("デフォルトモデルが存在しません。")),
-                        LMTextureManager.INSTANCE
-                                .getTexture("default")
-                                .orElseThrow(() -> new IllegalStateException("デフォルトモデルが存在しません。")));
+        TextureHolder defaultTexture =
+                LMTextureManager.INSTANCE
+                        .getTexture("default")
+                        .orElseThrow(() -> new IllegalStateException("デフォルトモデルが存在しません。"));
+        this.multiModel_TLM = new MultiModelCompound(this, defaultTexture, defaultTexture);
     }
 
     @Inject(method = "initDataTracker", at = @At("RETURN"))
@@ -208,7 +204,7 @@ public abstract class MixinPlayerEntity extends LivingEntity
 
     @Override
     public boolean isArmorGlint(Part part) {
-        return multiModel_TLM.isArmorVisible(part);
+        return multiModel_TLM.isArmorGlint(part);
     }
 
     @Override

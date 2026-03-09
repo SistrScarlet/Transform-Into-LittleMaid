@@ -7,8 +7,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
-import net.sistr.littlemaidmodelloader.entity.compound.IHasMultiModel;
-import net.sistr.transformintolittlemaid.util.LittleMaidTransformable;
+import net.sistr.transformintolittlemaid.util.MultiModelCopyUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,23 +28,7 @@ public abstract class MixinClientPlayNetworkHandler {
     public void postHandleRespawn(PlayerRespawnS2CPacket packet, CallbackInfo ci) {
         PlayerEntity player = MinecraftClient.getInstance().player;
         if (player == null || oldPlayer_TLM == null) return;
-        IHasMultiModel multiModel = (IHasMultiModel) player;
-        IHasMultiModel oldMultiModel = (IHasMultiModel) oldPlayer_TLM;
-        multiModel.setColorMM(oldMultiModel.getColorMM());
-        multiModel.setContractMM(oldMultiModel.isContractMM());
-        multiModel.setTextureHolder(
-                oldMultiModel.getTextureHolder(IHasMultiModel.Layer.SKIN, IHasMultiModel.Part.HEAD),
-                IHasMultiModel.Layer.SKIN,
-                IHasMultiModel.Part.HEAD);
-        for (IHasMultiModel.Part part : IHasMultiModel.Part.values()) {
-            multiModel.setTextureHolder(
-                    oldMultiModel.getTextureHolder(IHasMultiModel.Layer.INNER, part),
-                    IHasMultiModel.Layer.INNER,
-                    part);
-        }
-        ((LittleMaidTransformable) player)
-                .setTransformedLittleMaid_TLM(
-                        ((LittleMaidTransformable) oldPlayer_TLM).isTransformedLittleMaid_TLM());
+        MultiModelCopyUtil.copyMultiModelState(oldPlayer_TLM, player);
         oldPlayer_TLM = null;
     }
 }
