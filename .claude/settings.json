@@ -1,0 +1,7 @@
+{
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "jdtls-lsp@claude-plugins-official": true
+  }
+}

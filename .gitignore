@@ -19,3 +19,6 @@ classes/
 *.launch
 
 /.architectury-transformer/
+.claude/tools/
+.claude/agent-memory-local/
+.claude/settings.local.json
