@@ -12,12 +12,12 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.sistr.littlemaidmodelloader.entity.compound.IHasMultiModel;
 import net.sistr.littlemaidmodelloader.entity.compound.MultiModelCompound;
 import net.sistr.littlemaidmodelloader.maidmodel.IModelCaps;
 import net.sistr.littlemaidmodelloader.multimodel.IMultiModel;
-import net.sistr.littlemaidmodelloader.multimodel.layer.MMPose;
 import net.sistr.littlemaidmodelloader.resource.holder.TextureHolder;
 import net.sistr.littlemaidmodelloader.resource.manager.LMModelManager;
 import net.sistr.littlemaidmodelloader.resource.manager.LMTextureManager;
@@ -29,7 +29,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
 public abstract class MixinPlayerEntity extends LivingEntity
@@ -56,8 +55,8 @@ public abstract class MixinPlayerEntity extends LivingEntity
     }
 
     @Inject(method = "initDataTracker", at = @At("RETURN"))
-    private void onInitDataTracker(CallbackInfo ci) {
-        this.dataTracker.startTracking(TRANSFORMED_LITTLEMAID, false);
+    private void onInitDataTracker(DataTracker.Builder builder, CallbackInfo ci) {
+        builder.add(TRANSFORMED_LITTLEMAID, false);
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
@@ -87,60 +86,29 @@ public abstract class MixinPlayerEntity extends LivingEntity
         }
     }
 
-    @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
-    public void onGetDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
-        if (isTransformedLittleMaid_TLM()) {
-            getModel(Layer.SKIN, Part.HEAD)
-                    .ifPresent(
-                            model -> {
-                                IModelCaps caps = this.getCaps();
-                                cir.setReturnValue(
-                                        EntityDimensions.changing(
-                                                model.getWidth(caps, MMPose.convertPose(pose)),
-                                                model.getHeight(caps, MMPose.convertPose(pose))));
-                            });
-        }
-    }
+    // 1.21 で getDimensions(EntityPose)/getActiveEyeHeight は Entity/LivingEntity 側の
+    // final メソッドとなり、PlayerEntity 自身はオーバーライドを持たなくなったため
+    // Mixin @Inject の対象にできない(remap時に "does not exists in any of the targets" 警告)。
+    // 変身時のサイズ・視点変更は機能ロスとして受容する。TODO.md参照。
 
-    @Inject(method = "getActiveEyeHeight", at = @At("HEAD"), cancellable = true)
-    public void onGetActiveEyeHeight(
-            EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir) {
-        if (isTransformedLittleMaid_TLM()) {
-            getModel(Layer.SKIN, Part.HEAD)
-                    .ifPresent(
-                            model ->
-                                    cir.setReturnValue(
-                                            model.getEyeHeight(
-                                                    this.getCaps(), MMPose.convertPose(pose))));
-        }
-    }
-
-    // 上になんか乗ってるやつのオフセット
+    // 1.21 で Entity#getMountedHeightOffset は廃止。
+    // 乗客の乗車位置を返す getPassengerRidingPos で代替する(上になんか乗ってるやつのオフセット)
     @Override
-    public double getMountedHeightOffset() {
+    public Vec3d getPassengerRidingPos(Entity passenger) {
         if (!isTransformedLittleMaid_TLM()) {
-            return super.getMountedHeightOffset();
+            return super.getPassengerRidingPos(passenger);
         }
         IMultiModel model =
                 getModel(Layer.SKIN, Part.HEAD).orElse(LMModelManager.INSTANCE.getDefaultModel());
-        return model.getMountedYOffset(getCaps());
+        return getPos().add(0, model.getMountedYOffset(getCaps()), 0);
     }
 
-    // 騎乗時のオフセット
-    @Inject(method = "getHeightOffset", at = @At("HEAD"), cancellable = true)
-    public void getHeightOffset(CallbackInfoReturnable<Double> cir) {
-        if (isTransformedLittleMaid_TLM()) {
-            IMultiModel model =
-                    getModel(Layer.SKIN, Part.HEAD)
-                            .orElse(LMModelManager.INSTANCE.getDefaultModel());
-            cir.setReturnValue((double) (model.getyOffset(getCaps()) - getHeight()));
-        }
-    }
+    // 1.21 で Entity#getHeightOffset(騎乗時の自身のYオフセット)は廃止。代替APIなし。TODO.md参照。
 
     // 防具の更新
     @Inject(method = "equipStack", at = @At("HEAD"))
     public void onEquipStack(EquipmentSlot slot, ItemStack stack, CallbackInfo ci) {
-        if (slot.getType() == EquipmentSlot.Type.ARMOR) {
+        if (slot.isArmorSlot()) {
             multiModel_TLM.updateArmor();
         }
     }

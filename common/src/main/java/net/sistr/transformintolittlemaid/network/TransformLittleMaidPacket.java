@@ -3,33 +3,37 @@ package net.sistr.transformintolittlemaid.network;
 import static net.sistr.transformintolittlemaid.TransformIntoLittleMaidMod.MODID;
 
 import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import net.sistr.transformintolittlemaid.util.LittleMaidTransformable;
 
-public class TransformLittleMaidPacket {
-    public static final Identifier ID = new Identifier(MODID, "transform_littlemaid");
+public record TransformLittleMaidPacket(boolean changed) implements CustomPayload {
+    public static final CustomPayload.Id<TransformLittleMaidPacket> ID =
+            new CustomPayload.Id<>(Identifier.of(MODID, "transform_littlemaid"));
+
+    public static final PacketCodec<RegistryByteBuf, TransformLittleMaidPacket> CODEC =
+            PacketCodec.of(
+                    (packet, buf) -> buf.writeBoolean(packet.changed()),
+                    buf -> new TransformLittleMaidPacket(buf.readBoolean()));
+
+    @Override
+    public CustomPayload.Id<? extends CustomPayload> getId() {
+        return ID;
+    }
 
     @Environment(EnvType.CLIENT)
     public static void sendC2SPacket(boolean changed) {
-        PacketByteBuf buf = createC2SPacket(changed);
-        NetworkManager.sendToServer(ID, buf);
+        NetworkManager.sendToServer(new TransformLittleMaidPacket(changed));
     }
 
-    @Environment(EnvType.CLIENT)
-    public static PacketByteBuf createC2SPacket(boolean changed) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        buf.writeBoolean(changed);
-        return buf;
-    }
-
-    public static void receiveC2SPacket(PacketByteBuf buf, NetworkManager.PacketContext ctx) {
-        boolean transformed = buf.readBoolean();
-        ctx.queue(() -> transformC2S(ctx.getPlayer(), transformed));
+    public static void receiveC2SPacket(
+            TransformLittleMaidPacket payload, NetworkManager.PacketContext ctx) {
+        ctx.queue(() -> transformC2S(ctx.getPlayer(), payload.changed()));
     }
 
     public static void transformC2S(PlayerEntity player, boolean transformed) {

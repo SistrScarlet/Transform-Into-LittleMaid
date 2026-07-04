@@ -8,10 +8,12 @@ public class Networking {
         NetworkManager.registerReceiver(
                 NetworkManager.Side.C2S,
                 TransformLittleMaidPacket.ID,
+                TransformLittleMaidPacket.CODEC,
                 TransformLittleMaidPacket::receiveC2SPacket);
         NetworkManager.registerReceiver(
                 NetworkManager.Side.C2S,
                 RequestSyncMultiModelPacket.ID,
+                RequestSyncMultiModelPacket.CODEC,
                 RequestSyncMultiModelPacket::receiveC2SPacket);
     }
 }

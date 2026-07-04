@@ -26,7 +26,7 @@ import net.sistr.transformintolittlemaid.util.WaitTime;
 // MixinでPlayerEntityにIHasMultiModelをブチこんでるため、ジェネリクスはRawで使う
 @Environment(EnvType.CLIENT)
 public class LittleMaidPlayerRenderer extends PlayerEntityRenderer {
-    private static final Identifier NULL_TEXTURE = new Identifier(LMMLMod.MODID, "null");
+    private static final Identifier NULL_TEXTURE = Identifier.of(LMMLMod.MODID, "null");
     private final LittleMaidMultiModel model;
 
     public LittleMaidPlayerRenderer(EntityRendererFactory.Context context) {

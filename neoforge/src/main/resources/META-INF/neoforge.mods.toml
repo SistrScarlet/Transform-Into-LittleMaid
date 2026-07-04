@@ -1,0 +1,50 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+issueTrackerURL = "https://github.com/SistrScarlet/Transform-Into-LittleMaid/issues"
+license = "https://github.com/SistrScarlet/LittleMaidModelLoader-Fabric/blob/1.16_Architectury/LICENCE.md"
+
+[[mods]]
+modId = "transformintolittlemaid"
+version = "${version}"
+displayName = "Transform Into LittleMaid Mod"
+authors = "Sistr"
+description = "メイドさんに変身するModです"
+logoFile = "icon.png"
+
+[[mixins]]
+config = "transformintolittlemaid-common.mixins.json"
+
+[[dependencies.transformintolittlemaid]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.transformintolittlemaid]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,1.21.2)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.transformintolittlemaid]]
+modId = "architectury"
+type = "required"
+versionRange = "[13.0.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.transformintolittlemaid]]
+modId = "cloth_config"
+type = "required"
+versionRange = "[15.0.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.transformintolittlemaid]]
+modId = "littlemaidmodelloader"
+type = "required"
+versionRange = "[9.0.0,)"
+ordering = "AFTER"
+side = "BOTH"
