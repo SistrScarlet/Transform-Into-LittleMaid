@@ -4,15 +4,16 @@
 
 ## Architecture
 
-- Architectury Loom multi-module: `common/`, `fabric/`, `forge/`
+- Architectury Loom multi-module: `common/`, `fabric/`, `neoforge/`(`forge/` は 1.20 系参照用に残置、Gradle 対象外)
 - 共通コードは `common/src/main/java/net/sistr/transformintolittlemaid/`
+- LMML にのみ依存(LMRB には非依存)
 
 <!-- プロジェクト固有のアーキテクチャを記載 -->
 
 ## Environment
 
-- Minecraft 1.20.1, Gradle 7.4, Architectury API
-- Java 17 が必要（`~/.gradle/gradle.properties` で `org.gradle.java.home` 設定済み）
+- Minecraft 1.21.1, Gradle 8.8, Architectury API 13.0.8
+- Java 21 が必要（`~/.gradle/gradle.properties` で `org.gradle.java.home` 設定済み）
 
 ## Build & Test
 
@@ -41,6 +42,7 @@
 ## Cross-Environment Workflow
 
 - WSL2 から Windows リポジトリへローカルremote経由で転送可能
+- `git remote add local /mnt/v/Develop/Minecraft/Transform-Into-LittleMaid`
 - Windows側でチェックアウト中のブランチにはpush不可。別ブランチ名にpush: `git push local <branch>:wsl/{branch-name}`
 
 ### Code Editing Guidelines
