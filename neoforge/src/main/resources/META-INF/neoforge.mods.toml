@@ -45,6 +45,6 @@ side = "BOTH"
 [[dependencies.transformintolittlemaid]]
 modId = "littlemaidmodelloader"
 type = "required"
-versionRange = ""
+versionRange = "[0,)"
 ordering = "AFTER"
 side = "BOTH"
