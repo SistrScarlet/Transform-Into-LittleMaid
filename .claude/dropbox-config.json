@@ -1,0 +1,11 @@
+{
+  "dropbox_base": "/Mods/TransformIntoLittleMaid",
+  "upload_path": "{platform}/{mc_folder}/{jar}",
+  "platforms": [
+    "Fabric",
+    "NeoForge"
+  ],
+  "mc_version_folders": {
+    "1.21.1": "1.21.1"
+  }
+}
