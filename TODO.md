@@ -2,8 +2,8 @@
 
 ## 高
 
-- **変身時のサイズ・視点調整が機能しない(1.21.1移植の機能ロス)**: `getDimensions(EntityPose)` / `getEyeHeight(EntityPose)` が Entity/LivingEntity 側で final 化され、PlayerEntity 自身はオーバーライドを持たなくなったため Mixin `@Inject` の対象にできなくなった(remap 時に `does not exists in any of the targets` 警告)。変身してもメイドさんモデルの見た目サイズに応じた当たり判定・視点の高さが変わらなくなっている。`EntityAttachments` 経由での代替可否は未調査。復元するかどうかはユーザー判断が必要(LMML/LMRB も同種の制約を機能ロス受容している)
-- **騎乗時の自身のYオフセット (`getHeightOffset` 相当) が失われている**: 1.21 で `Entity#getHeightOffset` 自体が廃止され、代替APIが存在しない。変身状態で何かに騎乗した際の位置がずれる可能性がある
+- **変身時のサイズ・視点調整が機能しない(1.21.1移植の機能ロス)**: 変身してもメイドさんモデルの見た目サイズに応じた当たり判定・視点の高さが変わらない。2026-07-25 の調査で復元手段を特定済み — final 化されたのは `LivingEntity#getDimensions` であって、実質の拡張点は `getBaseDimensions(EntityPose)` (protected・非 final) に移されている。`PlayerEntity` 自身がこれを override 済み(水泳/睡眠ポーズ用)なので `@Mixin(PlayerEntity.class)` から `@Inject(method = "getBaseDimensions", ...)` が remap を通る。eyeHeight は `EntityDimensions.withEyeHeight()` で埋め込めば final な `getEyeHeight` が自動追従するため専用の注入ポイントは不要。詳細・実装時の罠は `LMML/docs/research/2026-07-25_dynamic-dimensions-1211-restore.md`
+- **騎乗時の自身のYオフセット (`getHeightOffset` 相当) が失われている**: 変身状態で何かに騎乗した際の位置がずれる。2026-07-25 の調査で `Entity#getVehicleAttachmentPos(Entity)` が `getHeightOffset` の直接の後継と判明(非 final、`LivingEntity`/`PlayerEntity` とも override 無し)。既存の `getPassengerRidingPos` override と同じパターンで `@Override` を足せば復元可能。ただし 1.20.1 の加算式に対し 1.21.1 は減算式のため**符号が逆**になる点に注意
 - **実機起動未検証**: ヘッドレス環境のためビルド確認のみ。クライアント起動、変身キー、モデル選択画面、防具装着、マルチプレイでの同期(リスポーン引き継ぎ含む)を実機で確認すること
 
 ## 中

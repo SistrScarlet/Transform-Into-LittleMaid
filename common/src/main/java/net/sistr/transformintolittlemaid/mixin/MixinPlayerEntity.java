@@ -18,6 +18,7 @@ import net.sistr.littlemaidmodelloader.entity.compound.IHasMultiModel;
 import net.sistr.littlemaidmodelloader.entity.compound.MultiModelCompound;
 import net.sistr.littlemaidmodelloader.maidmodel.IModelCaps;
 import net.sistr.littlemaidmodelloader.multimodel.IMultiModel;
+import net.sistr.littlemaidmodelloader.multimodel.layer.MMPose;
 import net.sistr.littlemaidmodelloader.resource.holder.TextureHolder;
 import net.sistr.littlemaidmodelloader.resource.manager.LMModelManager;
 import net.sistr.littlemaidmodelloader.resource.manager.LMTextureManager;
@@ -29,6 +30,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
 public abstract class MixinPlayerEntity extends LivingEntity
@@ -86,10 +88,24 @@ public abstract class MixinPlayerEntity extends LivingEntity
         }
     }
 
-    // 1.21 で getDimensions(EntityPose)/getActiveEyeHeight は Entity/LivingEntity 側の
-    // final メソッドとなり、PlayerEntity 自身はオーバーライドを持たなくなったため
-    // Mixin @Inject の対象にできない(remap時に "does not exists in any of the targets" 警告)。
-    // 変身時のサイズ・視点変更は機能ロスとして受容する。TODO.md参照。
+    // 1.21 で LivingEntity#getDimensions は final 化されたが、サブクラスの拡張点は
+    // getBaseDimensions(EntityPose) に移された。PlayerEntity 自身がこれを override 済み
+    // (水泳/睡眠ポーズ用) なので @Inject の対象にできる。
+    // final な getEyeHeight の中身は getDimensions(pose).eyeHeight() だけなので、
+    // withEyeHeight で埋め込めば視点高さも追従する(専用の注入ポイントは不要)。
+    @Inject(method = "getBaseDimensions", at = @At("HEAD"), cancellable = true)
+    private void onGetBaseDimensions(
+            EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
+        if (!isTransformedLittleMaid_TLM()) return;
+        IMultiModel model =
+                getModel(Layer.SKIN, Part.HEAD).orElse(LMModelManager.INSTANCE.getDefaultModel());
+        IModelCaps caps = getCaps();
+        MMPose mmPose = MMPose.convertPose(pose);
+        cir.setReturnValue(
+                EntityDimensions.changing(
+                                model.getWidth(caps, mmPose), model.getHeight(caps, mmPose))
+                        .withEyeHeight(model.getEyeHeight(caps, mmPose)));
+    }
 
     // 1.21 で Entity#getMountedHeightOffset は廃止。
     // 乗客の乗車位置を返す getPassengerRidingPos で代替する(上になんか乗ってるやつのオフセット)
@@ -103,7 +119,20 @@ public abstract class MixinPlayerEntity extends LivingEntity
         return getPos().add(0, model.getMountedYOffset(getCaps()), 0);
     }
 
-    // 1.21 で Entity#getHeightOffset(騎乗時の自身のYオフセット)は廃止。代替APIなし。TODO.md参照。
+    // 旧 getHeightOffset (自分が何かに乗るときの自身のYオフセット) の後継。
+    // 1.20.1 は vehicleY + vehicle.getMountedHeightOffset() + passenger.getHeightOffset() の
+    // 加算式、1.21.1 は vehicle.getPassengerRidingPos() - passenger.getVehicleAttachmentPos() の
+    // 減算式なので符号が反転する。0.2875 はボートでの見た目を 1.20.1 に合わせるための補正
+    // (getMountedHeightOffset=-0.1 → PASSENGER attachment=0.1875 の差分)。LMRB と同じ式。
+    @Override
+    public Vec3d getVehicleAttachmentPos(Entity vehicle) {
+        if (!isTransformedLittleMaid_TLM()) {
+            return super.getVehicleAttachmentPos(vehicle);
+        }
+        IMultiModel model =
+                getModel(Layer.SKIN, Part.HEAD).orElse(LMModelManager.INSTANCE.getDefaultModel());
+        return new Vec3d(0.0, 0.2875 + getHeight() - model.getyOffset(getCaps()), 0.0);
+    }
 
     // 防具の更新
     @Inject(method = "equipStack", at = @At("HEAD"))
