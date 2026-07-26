@@ -20,6 +20,9 @@
     ],
     "client": [
       "net.sistr.transformintolittlemaid.fabric.TILMFabric"
+    ],
+    "modmenu": [
+      "net.sistr.transformintolittlemaid.modmenu.fabric.TILMModMenuIntegration"
     ]
   },
   "mixins": [

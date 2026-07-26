@@ -38,8 +38,10 @@ public abstract class MixinPlayerEntity extends LivingEntity
     private MultiModelCompound multiModel_TLM;
     private static final TrackedData<Boolean> TRANSFORMED_LITTLEMAID =
             DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> APPLY_MAID_SIZE =
+            DataTracker.registerData(PlayerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private int waitTime_TILM = 0;
-    private boolean prevTransformedLittleMaid;
+    private boolean prevApplyDimensions_TILM;
     private boolean syncMultiModel;
 
     protected MixinPlayerEntity(EntityType<? extends LivingEntity> entityType, World world) {
@@ -59,6 +61,8 @@ public abstract class MixinPlayerEntity extends LivingEntity
     @Inject(method = "initDataTracker", at = @At("RETURN"))
     private void onInitDataTracker(DataTracker.Builder builder, CallbackInfo ci) {
         builder.add(TRANSFORMED_LITTLEMAID, false);
+        // クライアントから設定が届くまでは従来通りサイズを適用する
+        builder.add(APPLY_MAID_SIZE, true);
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
@@ -77,9 +81,10 @@ public abstract class MixinPlayerEntity extends LivingEntity
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void onTick(CallbackInfo ci) {
-        var bool = isTransformedLittleMaid_TLM();
-        if (prevTransformedLittleMaid != bool) {
-            prevTransformedLittleMaid = bool;
+        // 変身状態とサイズ適用設定のどちらが変わっても当たり判定を作り直す必要がある
+        var applyDimensions = isApplyMaidDimensions_TILM();
+        if (prevApplyDimensions_TILM != applyDimensions) {
+            prevApplyDimensions_TILM = applyDimensions;
             calculateDimensions();
         }
         if (getWorld().isClient && !syncMultiModel) {
@@ -96,7 +101,7 @@ public abstract class MixinPlayerEntity extends LivingEntity
     @Inject(method = "getBaseDimensions", at = @At("HEAD"), cancellable = true)
     private void onGetBaseDimensions(
             EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
-        if (!isTransformedLittleMaid_TLM()) return;
+        if (!isApplyMaidDimensions_TILM()) return;
         IMultiModel model =
                 getModel(Layer.SKIN, Part.HEAD).orElse(LMModelManager.INSTANCE.getDefaultModel());
         IModelCaps caps = getCaps();
@@ -111,7 +116,7 @@ public abstract class MixinPlayerEntity extends LivingEntity
     // 乗客の乗車位置を返す getPassengerRidingPos で代替する(上になんか乗ってるやつのオフセット)
     @Override
     public Vec3d getPassengerRidingPos(Entity passenger) {
-        if (!isTransformedLittleMaid_TLM()) {
+        if (!isApplyMaidDimensions_TILM()) {
             return super.getPassengerRidingPos(passenger);
         }
         IMultiModel model =
@@ -126,7 +131,7 @@ public abstract class MixinPlayerEntity extends LivingEntity
     // (getMountedHeightOffset=-0.1 → PASSENGER attachment=0.1875 の差分)。LMRB と同じ式。
     @Override
     public Vec3d getVehicleAttachmentPos(Entity vehicle) {
-        if (!isTransformedLittleMaid_TLM()) {
+        if (!isApplyMaidDimensions_TILM()) {
             return super.getVehicleAttachmentPos(vehicle);
         }
         IMultiModel model =
@@ -212,6 +217,21 @@ public abstract class MixinPlayerEntity extends LivingEntity
     @Override
     public void setTransformedLittleMaid_TLM(boolean isChanged) {
         this.dataTracker.set(TRANSFORMED_LITTLEMAID, isChanged);
+    }
+
+    @Override
+    public boolean isApplyMaidSize_TLM() {
+        return this.dataTracker.get(APPLY_MAID_SIZE);
+    }
+
+    @Override
+    public void setApplyMaidSize_TLM(boolean applyMaidSize) {
+        this.dataTracker.set(APPLY_MAID_SIZE, applyMaidSize);
+    }
+
+    /** メイドさんモデルのサイズを当たり判定へ反映すべきか */
+    private boolean isApplyMaidDimensions_TILM() {
+        return isTransformedLittleMaid_TLM() && isApplyMaidSize_TLM();
     }
 
     @Inject(method = "tickMovement", at = @At("HEAD"))

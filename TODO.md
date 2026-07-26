@@ -2,9 +2,8 @@
 
 ## 高
 
-- **変身時のサイズ・視点調整が機能しない(1.21.1移植の機能ロス)**: 変身してもメイドさんモデルの見た目サイズに応じた当たり判定・視点の高さが変わらない。2026-07-25 の調査で復元手段を特定済み — final 化されたのは `LivingEntity#getDimensions` であって、実質の拡張点は `getBaseDimensions(EntityPose)` (protected・非 final) に移されている。`PlayerEntity` 自身がこれを override 済み(水泳/睡眠ポーズ用)なので `@Mixin(PlayerEntity.class)` から `@Inject(method = "getBaseDimensions", ...)` が remap を通る。eyeHeight は `EntityDimensions.withEyeHeight()` で埋め込めば final な `getEyeHeight` が自動追従するため専用の注入ポイントは不要。詳細・実装時の罠は `LMML/docs/research/2026-07-25_dynamic-dimensions-1211-restore.md`
-- **騎乗時の自身のYオフセット (`getHeightOffset` 相当) が失われている**: 変身状態で何かに騎乗した際の位置がずれる。2026-07-25 の調査で `Entity#getVehicleAttachmentPos(Entity)` が `getHeightOffset` の直接の後継と判明(非 final、`LivingEntity`/`PlayerEntity` とも override 無し)。既存の `getPassengerRidingPos` override と同じパターンで `@Override` を足せば復元可能。ただし 1.20.1 の加算式に対し 1.21.1 は減算式のため**符号が逆**になる点に注意
-- **実機起動未検証**: ヘッドレス環境のためビルド確認のみ。クライアント起動、変身キー、モデル選択画面、防具装着、マルチプレイでの同期(リスポーン引き継ぎ含む)を実機で確認すること
+- **ワールド参加直後、サーバー側の当たり判定がメイドさんサイズになっていない**: 2026-07-26 の実機確認で発覚。クライアントは見た目もサイズも正しいが、サーバー側だけ通常プレイヤーサイズのまま。変身キーを押し直すと直る(`TransformLittleMaidPacket.transformC2S` が明示的に `calculateDimensions()` を呼ぶため)。`ServerPlayerEntity` に `getBaseDimensions` の override は無く、`PlayerEntity#tick` も `playerTick()` 経由で毎tick走るはずなので、コードリーディングだけでは原因未特定。`debug/dimension-sync` ブランチにログ入りビルドあり(両サイドの flag / モデル / dims / bbH を出力)。Fabric 環境で再現確認する
+- **実機起動未検証(残り)**: 変身時のサイズ・視点、騎乗時のYオフセットは 2026-07-26 に実機確認済み。モデル選択画面、防具装着、マルチプレイでの同期(リスポーン引き継ぎ含む)は未確認
 
 ## 中
 

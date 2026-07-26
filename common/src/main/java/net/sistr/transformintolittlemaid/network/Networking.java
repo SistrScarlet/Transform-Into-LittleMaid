@@ -15,5 +15,10 @@ public class Networking {
                 RequestSyncMultiModelPacket.ID,
                 RequestSyncMultiModelPacket.CODEC,
                 RequestSyncMultiModelPacket::receiveC2SPacket);
+        NetworkManager.registerReceiver(
+                NetworkManager.Side.C2S,
+                ApplyMaidSizePacket.ID,
+                ApplyMaidSizePacket.CODEC,
+                ApplyMaidSizePacket::receiveC2SPacket);
     }
 }

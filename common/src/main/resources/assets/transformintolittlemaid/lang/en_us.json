@@ -2,5 +2,10 @@
     "key.categories.transformintolittlemaid": "Transform Into LittleMaid",
 
     "transformintolittlemaid.key.transform": "Transform",
-    "transformintolittlemaid.key.select_model": "Select Model"
+    "transformintolittlemaid.key.select_model": "Select Model",
+
+    "text.autoconfig.transformintolittlemaid.title": "Transform Into LittleMaid Config",
+    "text.autoconfig.transformintolittlemaid.category.transform": "Transform",
+    "text.autoconfig.transformintolittlemaid.option.applyMaidSize": "Apply Model Size",
+    "text.autoconfig.transformintolittlemaid.option.applyMaidSize.@Tooltip": "When enabled, your hitbox and eye height match the maid model while transformed.\nWhen disabled, only your appearance changes and the hitbox and camera stay at the normal player size.\nDisable this if the lowered camera makes you motion sick."
 }

@@ -2,5 +2,10 @@
     "key.categories.transformintolittlemaid": "Transform Into LittleMaid",
 
     "transformintolittlemaid.key.transform": "Transform",
-    "transformintolittlemaid.key.select_model": "Select Model"
+    "transformintolittlemaid.key.select_model": "Select Model",
+
+    "text.autoconfig.transformintolittlemaid.title": "Transform Into LittleMaid Config",
+    "text.autoconfig.transformintolittlemaid.category.transform": "変身",
+    "text.autoconfig.transformintolittlemaid.option.applyMaidSize": "モデルのサイズを反映する",
+    "text.autoconfig.transformintolittlemaid.option.applyMaidSize.@Tooltip": "有効にすると、変身中の当たり判定と視点の高さがメイドさんモデルのサイズになります。\n無効にすると見た目だけがメイドさんになり、当たり判定と視点は通常のプレイヤーのままです。\n視点が低くて酔う場合は無効にしてください。"
 }
