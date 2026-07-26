@@ -2,8 +2,8 @@
 
 ## 高
 
-- **ワールド参加直後、サーバー側の当たり判定がメイドさんサイズになっていない**: 2026-07-26 の実機確認で発覚。クライアントは見た目もサイズも正しいが、サーバー側だけ通常プレイヤーサイズのまま。変身キーを押し直すと直る(`TransformLittleMaidPacket.transformC2S` が明示的に `calculateDimensions()` を呼ぶため)。`ServerPlayerEntity` に `getBaseDimensions` の override は無く、`PlayerEntity#tick` も `playerTick()` 経由で毎tick走るはずなので、コードリーディングだけでは原因未特定。`debug/dimension-sync` ブランチにログ入りビルドあり(両サイドの flag / モデル / dims / bbH を出力)。Fabric 環境で再現確認する
-- **実機起動未検証(残り)**: 変身時のサイズ・視点、騎乗時のYオフセットは 2026-07-26 に実機確認済み。モデル選択画面、防具装着、マルチプレイでの同期(リスポーン引き継ぎ含む)は未確認
+- **実機起動未検証(残り)**: 変身時のサイズ・視点、騎乗時のYオフセット、参加時のモデル同期、サイズ適用コンフィグは 2026-07-26 に実機確認済み。防具装着、マルチプレイでの同期(リスポーン引き継ぎ含む)は未確認
+- **LMML の `PlayerList.tracking` のプラットフォーム差が未解決**: Fabric は自分自身を含まず、NeoForge/Forge はワールド内全員を返す。TILM 側では「要求元へ直接も送る」ことで塞いだが、根本は LMML 側にある(LMML の TODO に登録済み)。LMML が直ったら TILM 側の重複送信を外せる。経緯は `docs/research/2026-07-26_self-model-sync-hitbox-mismatch.md`
 
 ## 中
 
