@@ -56,7 +56,7 @@
 
 ### API Research
 
-- Minecraft バニラ・Fabric・Forge などの前提 Mod の API 調査には必ず `mc-api-research` エージェントを使用する
+- Minecraft バニラ・Fabric・Forge などの前提 Mod の API 調査には必ず `mc-research` エージェントを使用する
 - `.gradle` キャッシュの jar を直接検索しない
 
 ### Design Review Guidelines
